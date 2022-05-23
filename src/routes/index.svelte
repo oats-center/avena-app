@@ -63,16 +63,20 @@
     </div>
     
     <!-- <div class="artboard artboard-horizontal phone-4">812×375</div> -->
-    
+    <div class="divider w-full"></div>
+
+
     <div class="flex flex"> 
         
-        <input type="text" name="todo" placeholder="Data input"
-        class="w-full apperance-none shadow-sm border border-gray-200 
-        p-2 focus:outline-none focus:border-gray-500 rounded-lg"/>
-        <div class="btn-group">
-            <button type="submit" class="w-full btn btn-active">Submit</button>
+        <!-- <input type="text" name="todo" placeholder="Data input"
+        class="w-fit apperance-none shadow-sm border border-gray-200 
+        p-2 focus:outline-none focus:border-gray-500 rounded-lg"/> -->
+        <input type="text" placeholder="Data Input" class="input input-bordered input-lg w-fit max-w-full" />
+  
+        <div class="btn-group h-10">
+            <button type="submit" class="w-52 h-fit btn btn-active">Submit</button>
             <Toggle bind:checked={isRadio} let:checked={checked}>
-                <button class="w-full btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
+                <button class="w-52 h-fit btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
             </Toggle>
         </div>
 
@@ -90,6 +94,10 @@
 
         
         
+    </div>
+
+    <div class="mockup-window border border-base-300">
+      <div class="flex justify-center px-4 py-16 border-t border-base-300">Screen</div>
     </div>
 
     <!-- <div class="margins">
