@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root{
+	font-family: Arial, Helvetica, sans-serif;
+	--primary-color:#b9c6d2;
+	--secondary-color: #d0dde9;
+	--tertiary-color: #edf0f8;
+}
+
+body{
+	background-color: var(--primary-color);
+	margin: 0;
+	min-height: 100vh;
+	background: linear-gradient(
+		180deg,
+		var(--primary-color),
+		var(--secondary-color),
+		var(--tertiary-color),
+	)
+}
+
+.tiledBackground {
+	background-image: url(https://iot4ag.us/wp-content/uploads/2021/03/IoT4Ag.svg);
+	background-size: 700px;
+	width: 700px;
+	height: 285px;
+	/* border: 2px solid; */
+	/* color: pink; */
+  }
