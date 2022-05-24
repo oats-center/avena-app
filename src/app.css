@@ -24,7 +24,8 @@ body{
 
 .tiledBackground {
 	background-image: url(https://iot4ag.us/wp-content/uploads/2021/03/IoT4Ag.svg);
-	background-size: 700px;
+	background-position: center;
+	background-size: 700px;	
 	width: 700px;
 	height: 285px;
 	/* border: 2px solid; */
