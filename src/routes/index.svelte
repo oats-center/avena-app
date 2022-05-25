@@ -1,5 +1,6 @@
 <script>
-    import '../app.css';
+    import { each } from 'svelte/internal';
+import '../app.css';
     import Toggle from './Toggle.svelte'
     let value = '';
     let name = 'Input data here';
@@ -8,11 +9,129 @@
 */
     let isRadio;
 
+    let data = [
+   {
+      "name":"systemd-fsck@dev-disk-by\\x2duuid-f967d22b\\x2d6bdc\\x2d4a3c\\x2d82c7\\x2dcd95531d7503.service",
+      "description":"File System Check on /dev/disk/by-uuid/f967d22b-6bdc-4a3c-82c7-cd95531d7503",
+      "load_state":"loaded",
+      "active_state":"active",
+      "sub_state":"exited",
+      "followed_by":"",
+      "service_type":"oneshot",
+      "status":"",
+      "start_time":1652227201621097,
+      "exit_time":1652227201678553,
+      "pid":1197,
+      "memory_accounting":true,
+      "memory_current":18446744073709551615,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":34619000
+   },
+   {
+      "name":"wg-quick@wgAvena.service",
+      "description":"WireGuard via wg-quick(8) for wgAvena",
+      "load_state":"loaded",
+      "active_state":"failed",
+      "sub_state":"failed",
+      "followed_by":"",
+      "service_type":"oneshot",
+      "status":"",
+      "start_time":1652286149036353,
+      "exit_time":1652286149154830,
+      "pid":57639,
+      "memory_accounting":true,
+      "memory_current":18446744073709551615,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":53775000
+   },
+   {
+      "name":"gssproxy.service",
+      "description":"GSSAPI Proxy Daemon",
+      "load_state":"loaded",
+      "active_state":"active",
+      "sub_state":"running",
+      "followed_by":"",
+      "service_type":"forking",
+      "status":"",
+      "start_time":1652227208244736,
+      "exit_time":0,
+      "pid":1416,
+      "memory_accounting":true,
+      "memory_current":1032192,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":535587000
+   },
+   {
+      "name":"systemd-zram-setup@zram0.service",
+      "description":"Create swap on /dev/zram0",
+      "load_state":"loaded",
+      "active_state":"active",
+      "sub_state":"exited",
+      "followed_by":"",
+      "service_type":"oneshot",
+      "status":"",
+      "start_time":1652227200752611,
+      "exit_time":1652227200770220,
+      "pid":1118,
+      "memory_accounting":true,
+      "memory_current":18446744073709551615,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":15468000
+   },
+   {
+      "name":"abrt-xorg.service",
+      "description":"ABRT Xorg log watcher",
+      "load_state":"loaded",
+      "active_state":"active",
+      "sub_state":"running",
+      "followed_by":"",
+      "service_type":"simple",
+      "status":"",
+      "start_time":1652227207346305,
+      "exit_time":0,
+      "pid":1376,
+      "memory_accounting":true,
+      "memory_current":2297856,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":4315524000
+   },
+   {
+      "name":"abrtd.service",
+      "description":"ABRT Automated Bug Reporting Tool",
+      "load_state":"loaded",
+      "active_state":"active",
+      "sub_state":"running",
+      "followed_by":"",
+      "service_type":"dbus",
+      "status":"",
+      "start_time":1652227207320534,
+      "exit_time":0,
+      "pid":1362,
+      "memory_accounting":true,
+      "memory_current":72404992,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":1777520000
+   }];
+
     console.log("Hello world")
+    console.log(data);
 </script>
 
 
 <!-- <div class="bg-fixed ..." style="background-image: url("tiledBackground")"> -->
+
 
 
   <nav>
@@ -72,33 +191,114 @@
 </svelte:head> -->
 
 <main>
-    <div class="tiledBackground center">
+    <div class="tiledBackground">
     </div>
     
     <div class="divider w-full"></div>
 
 
-    <div class="flex flex"> 
-        
-        <!-- <input type="text" placeholder="Data Input" class="input input-bordered input-lg w-fit max-w-full" /> -->
-        <textarea class="textarea textarea-primary max-w-full w-6/12" placeholder="Data Input"></textarea>
+      <!-- <div class="grid grid-cols-4 gap-4 mb-16"> -->
+      <div class="grid grid-cols-3 gap-2 mb-16">
+        <div>
+        {#each data as service}
+          <h1>{service.name}</h1>
+          <div class="stats shadow">
   
-        <div class="btn-group h-10">
-            <button type="submit" class="w-48 h-fit btn btn-active">Submit</button>
-            <Toggle bind:checked={isRadio} let:checked={checked}>
-                <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
-            </Toggle>
-            <button type="submit" class="w-48 h-fit btn btn-active">Reset</button>
+            <div class="stat">
+              <div class="stat-figure text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              </div>
+              <div class="stat-title">Total Likes</div>
+              <div class="stat-value text-primary">25.6K</div>
+              <div class="stat-desc">21% more than last month</div>
+            </div>
+            
+            <div class="stat">
+              <div class="stat-figure text-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <div class="stat-title">Page Views</div>
+              <div class="stat-value text-secondary">2.6M</div>
+              <div class="stat-desc">21% more than last month</div>
+            </div>
+            
+            <div class="stat">
+              <div class="stat-figure text-secondary">
+                <div class="avatar online">
+                  <div class="w-16 rounded-full">
+                    <img src="https://api.lorem.space/image/face?w=128&h=128" />
+                  </div>
+                </div>
+              </div>
+              <div class="stat-value">86%</div>
+              <div class="stat-title">Tasks done</div>
+              <div class="stat-desc text-secondary">31 tasks remaining</div>
+            </div>
+            
+          </div>
+
+
+        {/each}
+        <!-- <div class="form-control max-w-xs">
+        <label class="label">
+          <span class="label-text">Parameter 1</span>
+        </label>
+        <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+        <select class="select select-bordered max-w-xs">
+          <option disabled selected>Unit 1</option>
+          <option>Han Solo</option>
+          <option>Greedo</option>
+        </select>
         </div>
+        <div class="form-control max-w-xs">
+          <label class="label">
+            <span class="label-text">Parameter 2</span>
+          </label>
+          <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+          <select class="select select-bordered max-w-xs">
+            <option disabled selected>Unit 2</option>
+            <option>Han Solo</option>
+            <option>Greedo</option>
+          </select>
+        </div>
+        <div class="form-control max-w-xs">
+          <label class="label">
+            <span class="label-text">Parameter 3</span>
+          </label>
+          <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+          <select class="select select-bordered max-w-xs">
+            <option disabled selected>Unit 3</option>
+            <option>Han Solo</option>
+            <option>Greedo</option>
+          </select>
+        </div>
+        <div class="form-control max-w-xs pb-16">
+          <label class="label">
+            <span class="label-text">Parameter 4</span>
+          </label>
+          <input type="range" min="0" max="100" value="40" class="range range-primary" />
+        </div>        
+        <div class="btn-group h-10">
+          <!-- <button type="submit" class="w-48 h-fit btn btn-active">Submit</button> -->
+          <Toggle bind:checked={isRadio} let:checked={checked}>
+              <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
+          </Toggle>
+          <button type="submit" class="w-48 h-fit btn btn-active">Reset</button>
+         </div>    
+        </div>
+         <div class="space-y-28 mt-30 mockup-window border border-base-300 break-before-avoid">
+          <div class="flex justify-center px-4 py-16 border-t border-base-300">Screen</div>
+        </div>      
+      </div> -->
 
 
-        
-        
-    </div>
+        <!-- <input type="text" placeholder="Data Input" class="input input-bordered input-lg w-fit max-w-full" /> -->
+        <!-- <textarea class="textarea textarea-primary max-w-full w-6/12" placeholder="Data Input"></textarea> -->
 
-    <div class="mockup-window border border-base-300">
-      <div class="flex justify-center px-4 py-16 border-t border-base-300">Screen</div>
-    </div>
+
+      
+
+    
 
     
 
