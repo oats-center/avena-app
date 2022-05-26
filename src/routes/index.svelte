@@ -1,6 +1,7 @@
 <script>
     import { each } from 'svelte/internal';
-import '../app.css';
+    import { onMount } from 'svelte';
+    import '../app.css';
     import Toggle from './Toggle.svelte'
     let value = '';
     let name = 'Input data here';
@@ -8,6 +9,23 @@ import '../app.css';
 * @type {boolean | undefined}
 */
     let isRadio;
+    let time = new Date();
+
+    $: hours = time.getHours();
+    $: minutes = time.getMinutes();
+    $: seconds = time.getSeconds();
+    $: milliseconds = time.getTime();
+
+
+    onMount(() => {
+      const interval = setInterval(() => {
+        time = new Date();
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+  	});
 
     let data = [
    {
@@ -125,6 +143,13 @@ import '../app.css';
       "cpu_usage_n_sec":1777520000
    }];
 
+
+  //  function getHour(){
+    
+  //   return Math.round(milliseconds - service.start_time/1000)/1000/3600%24;
+
+  //  }
+
     console.log("Hello world")
     console.log(data);
 </script>
@@ -196,49 +221,74 @@ import '../app.css';
     
     <div class="divider w-full"></div>
 
+      <div class="space-y-28 mt-30 h-96 mockup-window border border-base-300 break-before-avoid mb-16">
+        <div class="flex justify-center px-4 py-16 border-t border-base-300">Main Dashboard</div>
+      </div>      
+
+    <div class="divider w-full"></div>
 
       <!-- <div class="grid grid-cols-4 gap-4 mb-16"> -->
+      
       <div class="grid grid-cols-3 gap-2 mb-16">
-        <div>
         {#each data as service}
-          <h1>{service.name}</h1>
-          <div class="stats shadow">
-  
-            <div class="stat">
-              <div class="stat-figure text-primary">
+        {@const Hour = Math.round((milliseconds - service.start_time/1000)/1000/3600%24)}
+        {@const Min = Math.round((milliseconds - service.start_time/1000)/1000/60%60)}
+        {@const Sec = Math.round((milliseconds - service.start_time/1000)/1000%60)}
+          <div class="stats shadow max-w-fit">
+            
+            <div class="stat w-96 break-words">
+              <!-- <div class="stat-figure text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-              </div>
-              <div class="stat-title">Total Likes</div>
-              <div class="stat-value text-primary">25.6K</div>
-              <div class="stat-desc">21% more than last month</div>
+              </div> -->
+              <div class="stat-title">Service Type</div>
+              <div class="stat-value text-primary text-base truncate">{service.name}</div>
+              <!-- <div class="stat-desc">21% more than last month</div> -->
             </div>
             
-            <div class="stat">
-              <div class="stat-figure text-secondary">
+            <div class="stat w-64">
+              <!-- <div class="stat-figure text-secondary">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              </div>
-              <div class="stat-title">Page Views</div>
-              <div class="stat-value text-secondary">2.6M</div>
-              <div class="stat-desc">21% more than last month</div>
+              </div> -->
+              <div class="stat-title">Run Time</div>
+              
+              <div class="stat-value text-secondary">{Hour}:{Min}:{Sec}</div>
+              <!-- <div class="stat-desc">21% more than last month</div> -->
+            </div>
+
+            <div class="stat w-64">
+              <div class="stat-value">{(service.memory_current/service.memory_available*100).toFixed(2)}%</div>
+              <div class="stat-title">Memory Utilization</div>
+              <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
             </div>
             
-            <div class="stat">
-              <div class="stat-figure text-secondary">
+            <div class="stat w-64">
+              <!-- <div class="stat-figure text-secondary">
                 <div class="avatar online">
                   <div class="w-16 rounded-full">
                     <img src="https://api.lorem.space/image/face?w=128&h=128" />
                   </div>
                 </div>
-              </div>
-              <div class="stat-value">86%</div>
-              <div class="stat-title">Tasks done</div>
-              <div class="stat-desc text-secondary">31 tasks remaining</div>
+              </div> -->
+              <div class="stat-value">{(service.cpu_usage_n_sec/service.cpu_shares*100).toFixed(2)}%</div>
+              <div class="stat-title">CPU Utilization</div>
+              <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
             </div>
+            <div class="btn-group h-10">
+          
+              <Toggle bind:checked={isRadio} let:checked={checked}>
+                  <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
+              </Toggle>
+              <button type="submit" class="w-48 h-fit btn btn-active">Reset</button>
+             </div>   
             
           </div>
-
-
+           
         {/each}
+
+        
+        </div>
+
+      </div>
         <!-- <div class="form-control max-w-xs">
         <label class="label">
           <span class="label-text">Parameter 1</span>
@@ -279,7 +329,6 @@ import '../app.css';
           <input type="range" min="0" max="100" value="40" class="range range-primary" />
         </div>        
         <div class="btn-group h-10">
-          <!-- <button type="submit" class="w-48 h-fit btn btn-active">Submit</button> -->
           <Toggle bind:checked={isRadio} let:checked={checked}>
               <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
           </Toggle>
@@ -296,15 +345,7 @@ import '../app.css';
         <!-- <textarea class="textarea textarea-primary max-w-full w-6/12" placeholder="Data Input"></textarea> -->
 
 
-      
-
-    
-
-    
-
     <footer class="footer p-10 bg-base-200 text-base-content">
-
-
 
       <div>
         <img src="https://iot4ag.us/wp-content/uploads/2021/03/IoT4Ag-white-logo.png" width="200"/>
