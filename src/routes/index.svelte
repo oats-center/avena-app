@@ -166,8 +166,40 @@
       <!-- <div class="navbar bg-base-100"> -->
       <!-- <h1 class="text-3xl font-bold text-center text-gray-800">ISOBlue Demo</h1> -->
       
+      <!-- <div class="flex flex-row">
+          <div class="basis-1/8">
+              <a href="/" class="tab tab-bordered">Home</a> 
+              <a href="/spectogram" class="tab tab-bordered tab-active">Spectogram</a> 
+          </div>
+      </div> -
+
+
+          <div class="flex-none gap-2">
+            <div class="form-control">
+              <input type="text" placeholder="Search" class="input input-bordered" />
+            </div>
+            <div class="dropdown dropdown-end">
+              <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                  <img src="https://api.lorem.space/image/face?hash=33791" />
+                </div>
+              </label>
+              <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                <li>
+                  <a class="justify-between">
+                    Profile
+                    <span class="badge">New</span>
+                  </a>
+                </li>
+                <li><a>Settings</a></li>
+                <li><a>Logout</a></li>
+              </ul>
+            </div>
+          </div>
+        </div> -->
         
   </nav>
+
   <div class="navbar bg-base-100">
     <div class="flex-none">
       <button class="btn btn-square btn-ghost">
@@ -230,6 +262,7 @@
       <!-- <div class="grid grid-cols-4 gap-4 mb-16"> -->
       
       <div class="grid grid-cols-3 gap-2 mb-16">
+        <div>
         {#each data as service}
         {@const Hour = Math.round((milliseconds - service.start_time/1000)/1000/3600%24)}
         {@const Min = Math.round((milliseconds - service.start_time/1000)/1000/60%60)}
@@ -285,10 +318,11 @@
            
         {/each}
 
-        
         </div>
-
       </div>
+
+      <!-- </div> -->
+
         <!-- <div class="form-control max-w-xs">
         <label class="label">
           <span class="label-text">Parameter 1</span>
