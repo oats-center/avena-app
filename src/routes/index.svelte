@@ -24,7 +24,7 @@
       <div class="flex flex-row">
           <div class="basis-1/8">
               <a href="/" class="tab tab-bordered">Home</a> 
-              <a href="/spectogram.svelte" class="tab tab-bordered tab-active">Spectogram</a> 
+              <a href="/spectogram" class="tab tab-bordered tab-active">Spectogram</a> 
           </div>
           <!-- <div class="flex-none gap-2">
             <div class="form-control">
