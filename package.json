@@ -28,18 +28,24 @@
     "prettier": "^2.5.1",
     "prettier-plugin-svelte": "^2.5.0",
     "smui-theme": "^6.0.0-beta.16",
-    "svelte": "^3.44.0",
-    "svelte-check": "^2.2.6",
-    "svelte-preprocess": "^4.10.6",
+    "svelte-check": "^2.7.1",
+    "svelte-loader": "3.1.2",
     "tailwindcss": "^3.0.24",
-    "typescript": "~4.6.2"
+    "ts-loader": "9.3.0",
+    "tslib": "2.4.0",
+    "typescript": "4.6.4",
+    "webpack": "5.72.1",
+    "webpack-cli": "4.9.2"
   },
   "type": "module",
   "dependencies": {
     "clean": "^4.0.2",
+    "d3-delaunay": "^6.0.2",
+    "d3-scale-chromatic": "^3.0.0",
     "daisyui": "^2.15.0",
     "header": "^0.1.1",
     "layercake": "^6.1.0",
+    "svelte-canvas": "^0.7.1",
     "svelte-material-ui": "^6.0.0-beta.16"
   }
 }
