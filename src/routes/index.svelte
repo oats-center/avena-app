@@ -11,7 +11,6 @@
 */
     let isRadio;
     let time = new Date();
-    let InactiveService;
 
     $: hours = time.getHours();
     $: minutes = time.getMinutes();
@@ -28,6 +27,27 @@
         clearInterval(interval);
       };
   	});
+    let InactiveService = [
+      {
+      "name":"abrtd.service",
+      "description":"ABRT Automated Bug Reporting Tool",
+      "load_state":"loaded",
+      "active_state":"active",
+      "sub_state":"running",
+      "followed_by":"",
+      "service_type":"dbus",
+      "status":"",
+      "start_time":1652227207320534,
+      "exit_time":0,
+      "pid":1362,
+      "memory_accounting":true,
+      "memory_current":72404992,
+      "memory_available":18446744073709551615,
+      "cpu_accounting":true,
+      "cpu_shares":18446744073709551615,
+      "cpu_usage_n_sec":1777520000
+   }
+    ];
 
     let ActiveService = [
    {
@@ -125,41 +145,38 @@
       "cpu_shares":18446744073709551615,
       "cpu_usage_n_sec":4315524000
    },
-   {
-      "name":"abrtd.service",
-      "description":"ABRT Automated Bug Reporting Tool",
-      "load_state":"loaded",
-      "active_state":"active",
-      "sub_state":"running",
-      "followed_by":"",
-      "service_type":"dbus",
-      "status":"",
-      "start_time":1652227207320534,
-      "exit_time":0,
-      "pid":1362,
-      "memory_accounting":true,
-      "memory_current":72404992,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":1777520000
-   }];
+   ];
 
 
    function EndService(){
       const service = ActiveService.shift();
       InactiveService.push(service);
-      ActiveService.pop();
+      InactiveService = InactiveService;
+      // ActiveService.pop();
       ActiveService = ActiveService;
-      console.log(InactiveService);
+      console.log("End Service");
    }
 
-   function Remove(){
-      ActiveService.pop();
+   function StartService(){
+      const Iservice = InactiveService.shift();
+      ActiveService.push(Iservice);
       ActiveService = ActiveService;
-      console.log("removed");
+      // InactiveService.pop();
+      InactiveService = InactiveService;      
+      console.log("Start Service");
    }
 
+  //  function IsRunning(){
+      
+  //     if (service.sub_state == "running"){        
+  //       return true;
+  //     }       
+  //     else {
+  //       return false;
+  //       console.log (service.sub_state);
+  //     }
+
+  //  }
 
 
     console.log("Hello world")
@@ -167,104 +184,8 @@
 </script>
 
 
-<!-- <div class="bg-fixed ..." style="background-image: url("tiledBackground")"> -->
-
-
-
-  <nav>
-      
-      <!-- <a href="/">Home</a> -->
-
-      <!-- <div class="navbar bg-base-100"> -->
-      <!-- <h1 class="text-3xl font-bold text-center text-gray-800">ISOBlue Demo</h1> -->
-      
-      <!-- <div class="flex flex-row">
-          <div class="basis-1/8">
-              <a href="/" class="tab tab-bordered">Home</a> 
-              <a href="/spectogram" class="tab tab-bordered tab-active">Spectogram</a> 
-          </div>
- 
-
-
-          <div class="flex-none gap-2">
-            <div class="form-control">
-              <input type="text" placeholder="Search" class="input input-bordered" />
-            </div>
-            <div class="dropdown dropdown-end">
-              <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                <div class="w-10 rounded-full">
-                  <img src="https://api.lorem.space/image/face?hash=33791" />
-                </div>
-              </label>
-              <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                <li>
-                  <a class="justify-between">
-                    Profile
-                    <span class="badge">New</span>
-                  </a>
-                </li>
-                <li><a>Settings</a></li>
-                <li><a>Logout</a></li>
-              </ul>
-            </div>
-          </div>
-        </div> -->
-        
-  </nav>
-
-  <!-- <div class="navbar bg-base-100">
-    <div class="flex-none">
-      <button class="btn btn-square btn-ghost">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-      </button>
-    </div>
-    <div class="flex-1">
-      <a href="/" class="tab tab-bordered">Home</a> 
-        <a href="/spectogram" class="tab tab-bordered tab-active">Spectogram</a> 
-        <a href="/spectogram2" class="tab tab-bordered tab-active">Spectogram</a> 
-    </div>
-    <div class="flex-none">
-      <button class="btn btn-square btn-ghost">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-      </button>
-    </div>
-    
-  </div> -->
-
-  <!-- <div class="absolute top-5 right-10">
-    <div class="form-control">
-      <input type="text" placeholder="Search" class="input input-bordered" />
-    </div>
-    <div class="dropdown dropdown-end">
-      <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-        <div class="w-10 rounded-full">
-          <img src="https://api.lorem.space/image/face?hash=33791" />
-        </div>
-      </label>
-      <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-        <li>
-          <a class="justify-between">
-            Profile
-            <span class="badge">New</span>
-          </a>
-        </li>
-        <li><a>Settings</a></li>
-        <li><a>Logout</a></li>
-      </ul>
-    </div>
-  </div> -->
-  
-
-
-<!-- <svelte:head>
-    <title> Svelte Kit</title>
-</svelte:head> -->
-
 <main>
-
-
     
-    <div class="divider w-full"></div>
     <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Main Dashboard</h2>
 
       <div class="flex items-center mt-30 mb-16 h-96 border border-base-300 break-before-avoid">
@@ -273,6 +194,7 @@
         <div class="radial-progress mt-30" style="--value:70; --size:16rem; --thickness: 2rem;">Memory Utilization <br> 80%</div>
       </div>      
     <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Active Services</h2>
+    
     <div class="divider w-full"></div>
     
 
@@ -285,6 +207,7 @@
         {@const Min = Math.round((milliseconds - service.start_time/1000)/1000/60%60)}
         {@const Sec = Math.round((milliseconds - service.start_time/1000)/1000%60)}
         {@const MemoryShare = Math.round(service.memory_current/service.memory_available*100)%100}
+        <!-- {checked = IsRunning} -->
         
 
         <!-- {#if MemoryShare == 100}
@@ -329,11 +252,11 @@
               <div class="stat-title">CPU Usage</div>
               <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
             </div>
-            <div class="btn-group h-10">
-          
+            <div class="btn-group h-10">          
               <!-- <Toggle bind:checked={isRadio} let:checked={checked}> -->
               <Toggle bind:checked={isRadio} let:checked={checked}>
-                 <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button>
+                 <!-- <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button> -->
+                 <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Pause'}</button>
               </Toggle>
               <button on:click={EndService} type="submit" class="w-48 h-fit btn btn-active" > End Service </button>
              </div>   
@@ -343,107 +266,70 @@
         {/each}
 
         </div>
+
+
       </div>
 
 
-      <!-- <div class="grid grid-cols-3 gap-2 mb-16">
+      <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Inactive Services</h2>
+      
+      <div class="divider w-full"></div>
+
+      <div class="grid grid-cols-3 gap-2 mb-16">
         <div>
-        {#each InactiveService as service}  
-           
-        {/each}
+          {#each InactiveService as Iservice}
+          {@const Hour = Math.round((milliseconds - Iservice.start_time/1000)/1000/3600%24)}
+          {@const Min = Math.round((milliseconds - Iservice.start_time/1000)/1000/60%60)}
+          {@const Sec = Math.round((milliseconds - Iservice.start_time/1000)/1000%60)}
+          {@const MemoryShare = Math.round(Iservice.memory_current/Iservice.memory_available*100)%100}
+          <!-- {checked = IsRunning} -->
+          
+  
+          <!-- {#if MemoryShare == 100}
+              {MemoryShare = 0};
+            {/if} -->
+            <div class="stats shadow max-w-fit">
+              
+              <div class="stat w-96 break-words">
+                <!-- <div class="stat-figure text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                </div> -->
+                <div class="stat-title">Service Type</div>
+                <div class="stat-value text-primary text-base truncate">{Iservice.name}</div>
+                <!-- <div class="stat-desc">21% more than last month</div> -->
+              </div>
+              
+              <div class="stat w-64">
+                <!-- <div class="stat-figure text-secondary">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div> -->
+                <div class="stat-title">State</div>
+                
+                <div class="stat-value text-secondary">Inactive</div>
+                <!-- <div class="stat-desc">21% more than last month</div> -->
+              </div>
+  
+              <!-- <div class="stat w-64">
+                <div class="stat-value">{(MemoryShare).toFixed(2)}%</div>
+                <div class="stat-title">Memory Usage</div>
+              </div> -->
+              
+              <div class="btn-group h-10">          
+                <!-- <Toggle bind:checked={isRadio} let:checked={checked}>
+                   <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button>
+                </Toggle> -->
+                <button on:click={StartService} type="submit" class="w-48 h-fit btn btn-active" > Start Service </button>
+               </div>   
+              
+            </div>
+
+
+
+          {/each}
 
         </div>
-      </div> -->
-
-      <!-- </div> -->
-
-        <!-- <div class="form-control max-w-xs">
-        <label class="label">
-          <span class="label-text">Parameter 1</span>
-        </label>
-        <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
-        <select class="select select-bordered max-w-xs">
-          <option disabled selected>Unit 1</option>
-          <option>Han Solo</option>
-          <option>Greedo</option>
-        </select>
-        </div>
-        <div class="form-control max-w-xs">
-          <label class="label">
-            <span class="label-text">Parameter 2</span>
-          </label>
-          <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
-          <select class="select select-bordered max-w-xs">
-            <option disabled selected>Unit 2</option>
-            <option>Han Solo</option>
-            <option>Greedo</option>
-          </select>
-        </div>
-        <div class="form-control max-w-xs">
-          <label class="label">
-            <span class="label-text">Parameter 3</span>
-          </label>
-          <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
-          <select class="select select-bordered max-w-xs">
-            <option disabled selected>Unit 3</option>
-            <option>Han Solo</option>
-            <option>Greedo</option>
-          </select>
-        </div>
-        <div class="form-control max-w-xs pb-16">
-          <label class="label">
-            <span class="label-text">Parameter 4</span>
-          </label>
-          <input type="range" min="0" max="100" value="40" class="range range-primary" />
-        </div>        
-        <div class="btn-group h-10">
-          <Toggle bind:checked={isRadio} let:checked={checked}>
-              <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Stop'}</button>
-          </Toggle>
-          <button type="submit" class="w-48 h-fit btn btn-active">Reset</button>
-         </div>    
-        </div>
-         <div class="space-y-28 mt-30 mockup-window border border-base-300 break-before-avoid">
-          <div class="flex justify-center px-4 py-16 border-t border-base-300">Screen</div>
-        </div>      
-      </div> -->
-
-
-        <!-- <input type="text" placeholder="Data Input" class="input input-bordered input-lg w-fit max-w-full" /> -->
-        <!-- <textarea class="textarea textarea-primary max-w-full w-6/12" placeholder="Data Input"></textarea> -->
-
+      </div>
 
 </main>
 
-
-<!-- <footer class="footer p-10 bg-base-200 text-base-content">
-
-  <div>
-    <img src="https://iot4ag.us/wp-content/uploads/2021/03/IoT4Ag-white-logo.png" width="200"/>
-   
-    <p>The Internet of Things for Precision Agriculture <br>
-      an NSF Engineering Research Center</p>
-
-    <p>Purdue University</p>
-  </div> 
-  <div class="grid grid-flow-col gap-4">
-    <a class="link link-hover">About us</a> 
-    <a class="link link-hover">Contact</a> 
-    <div class="grid grid-flow-col gap-4">
-      <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg></a> 
-      <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg></a> 
-      <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg></a>
-    </div>        
-  </div> 
-  
-  <!-- <div>
-    <p>Copyright © 2022 - All right reserved by ACME Industries Ltd</p>
-  </div>
-</footer> -->
-
-
-
-
-
-<!-- <input value={name}> -->
 

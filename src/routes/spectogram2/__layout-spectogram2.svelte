@@ -3,15 +3,20 @@
     import Footer from '$lib/footer.svelte'
     import '../../app.css'
 </script>
-<header>
+<!-- <header>
     <Title></Title>
-</header>
+</header> -->
+
 <main>
     <slot></slot>
 </main>
-<footer>
+
+<!-- <div class="container mx-auto my-6 max-w-full">
+    <slot></slot>
+</div> -->
+<!-- <footer>
     <Footer></Footer>
-</footer>
+</footer> -->
 
 <style>
     header {

@@ -13,13 +13,13 @@
     <Title></Title>
 </header>
 
-<!-- 
+
 <main>
-	<slot />
-</main> -->
- <div class="container mx-auto my-6 max-w-full">
+	<slot></slot>
+</main> 
+ <!-- <div class="container mx-auto my-6 max-w-full">
       <slot></slot>
-  </div>
+  </div> -->
 
 
   <footer>
@@ -28,10 +28,19 @@
 
   
 <style>
+
 	header {
         text-align: center;
     }
 	main {
+		flex: 1;
+		display: fex;
+		flex-direction: column;
+		width: 100%;
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
+	/* main {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
@@ -42,7 +51,7 @@
         max-width: 200px;
 		margin: 0 auto;
 		box-sizing: border-box;
-	}
+	} */
 
 	/* footer {
 		display: flex;
