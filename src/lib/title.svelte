@@ -11,7 +11,7 @@
     </div>
     <div class="flex-1">
       <a href="/" class="tab tab-bordered">Home</a> 
-        <!-- <a href="/spectogram" class="tab tab-bordered tab-active">Spectogram</a>  -->
+        <a href="/spectogram" class="tab tab-bordered tab-active">Spectogram</a> 
         <a href="/spectogram2" class="tab tab-bordered tab-active">Spectrogram</a> 
     </div>
     <!-- <div class="flex-none">
