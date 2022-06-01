@@ -42,6 +42,6 @@
         display: inline-block;
         margin: 0 auto;
         /* width: 100%; */
-        width: 1000px;
+        width: 600px;
     }
 </style>

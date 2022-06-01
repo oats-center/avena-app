@@ -3,15 +3,15 @@
     import Footer from '$lib/footer.svelte'
     import '../../app.css'
 </script>
-<header>
+<!-- <header>
     <Title></Title>
-</header>
+</header> -->
 <main>
     <slot></slot>
 </main>
-<footer>
+<!-- <footer>
     <Footer></Footer>
-</footer>
+</footer> -->
 
 <style>
     header {
