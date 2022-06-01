@@ -26,6 +26,7 @@
     <Footer></Footer>
 </footer>
 
+  
 <style>
 
 	header {
@@ -69,4 +70,4 @@
 			padding: 40px 0;
 		}
 	} */
-</style>
+</style>  \

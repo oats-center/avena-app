@@ -6,7 +6,7 @@
   import Area from '../_components/Area.svelte';
   import AxisX from '../_components/AxisX.svelte';
   import AxisY from '../_components/AxisY.svelte';
-  import '../../app.css';
+  import '../app.css';
   // import Brush from '../_components/Brush.html.svelte';
   const data = [
 	{

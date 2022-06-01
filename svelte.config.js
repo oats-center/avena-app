@@ -1,6 +1,5 @@
 // import adapter from '@sveltejs/adapter-auto';
 import preprocess from "svelte-preprocess";
-// import typescript from '@rollup/plugin-typescript';
 
 
 // /** @type {import('@sveltejs/kit').Config} */
@@ -12,12 +11,13 @@ import preprocess from "svelte-preprocess";
 
 const config = {
 	preprocess: [
-		preprocess({
-			postcss: true,
-		}),
+	  preprocess({
+		postcss: true,
+	  }),
 	],
-}
+  }
 
-export default config
+
+export default config;
 
 

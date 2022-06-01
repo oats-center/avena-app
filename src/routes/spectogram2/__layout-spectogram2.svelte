@@ -23,16 +23,10 @@
         text-align: center;
     }
     main {
-        /* display: flex;
+        display: flex;
         flex-direction: column;
         align-items: center;
         margin: 20px auto;
-        flex: 1; */
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		margin: 20 auto;
-		box-sizing: border-box;
     }
     footer {
         display:flex;
