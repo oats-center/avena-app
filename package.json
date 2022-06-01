@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.21.0",
+    "@rollup/plugin-typescript": "^8.3.2",
     "@smui/button": "^6.0.0-beta.16",
     "@smui/card": "^6.0.0-beta.16",
     "@smui/textfield": "^6.0.0-beta.16",
@@ -45,6 +46,7 @@
     "daisyui": "^2.15.0",
     "header": "^0.1.1",
     "layercake": "^6.1.0",
+    "svelte": "^3.48.0",
     "svelte-canvas": "^0.7.1",
     "svelte-material-ui": "^6.0.0-beta.16"
   }

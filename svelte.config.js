@@ -1,6 +1,6 @@
 // import adapter from '@sveltejs/adapter-auto';
 import preprocess from "svelte-preprocess";
-import typescript from '@rollup/plugin-typescript';
+// import typescript from '@rollup/plugin-typescript';
 
 
 // /** @type {import('@sveltejs/kit').Config} */
