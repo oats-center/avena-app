@@ -9,17 +9,29 @@
 	import AxisY from '../_components/AxisY.svelte';
 
 	import { onMount } from 'svelte';
-	
+
 	import { extent } from 'd3-array';
 	import { scaleLinear } from 'd3-scale';
-    import { each } from 'svelte/internal';
+	import { each } from 'svelte/internal';
 
 	import Point from '../_components/Point.svelte';
 	import Axis from '../_components/Axis.svelte';
 	import { component_subscribe, each, loop_guard } from 'svelte/internal';
 	import { interpolateInferno } from 'd3-scale-chromatic';
 	import Index from '../index.svelte';
-	const colors = interpolateInferno(0.1);
+	// const colors = interpolateInferno(0.1)[9];
+	const colors = [
+		'#000004',
+		'#010005',
+		'#5a116e',
+		'#61136e',
+		'#a22b62',
+		'#d54a41',
+		'#d74b3f',
+		'#e8602d',
+		'#f8890c',
+		'#fcffa4'
+	];
 
 	let colorKey;
 	let CurrentColor;
@@ -27,7 +39,7 @@
 	function chooseColor(key) {
 		// colorKey = key;
 		color = colors[key];
-		return colors[key]
+		return colors[key];
 	}
 	// $: color = colors[colorKey];
 	const margin = { top: 10, right: 10, bottom: 20, left: 35 };
@@ -36,7 +48,7 @@
 	let width, height;
 	// import fft_data from './mock_fft.json';
 	// const data = JSON.parse(fft_data);
-	
+
 	// points = JSON.parse(JSON.stringify(fft_data));
 	points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
 
@@ -44,14 +56,14 @@
 	// let json = data.json();
 
 	// import fft_data from './mock_fft_1.json';
-    // import fft_data from './sample1.json';
-    import fft_data from './sample1.json';
+	// import fft_data from './sample1.json';
+	import fft_data from './sample1.json';
 
 	const xKey = 'frequency';
 	const yKey = 'magnitude';
 
 	import Index from '../index.svelte';
-// import Brush from '../_components/Brush.html.svelte';
+	// import Brush from '../_components/Brush.html.svelte';
 
 	$: x = scaleLinear()
 		// .domain(extent(points, (d) => d.freq))
@@ -64,7 +76,6 @@
 		.domain([0, 200])
 		.range([height - margin.bottom, margin.top])
 		.nice();
-
 </script>
 
 <!-- <div class="spectogram">
@@ -75,39 +86,38 @@
 	<!-- grid grid-cols-2 gap-2 -->
 	<div class="flex flex-row mb-16 ml-8">
 		<div class="basis-1/2">
-
 			<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
 				<Canvas {width} {height}>
 					<Axis type="x" scale={x} tickNumber={10} {margin} />
 					<Axis type="y" scale={y} tickNumber={10} {margin} />
 					<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
-		
+
 					{#each fft_data as { FFT }, time_index}
 						{#each FFT as { value }, freq_index}
 							<!-- <p>{FFT[freq_index]}, {freq_index}</p> -->
 							{#if FFT[freq_index] > -2}
-								{color = colors[0]}
+								{(color = colors[0])}
 							{:else if FFT[freq_index] < -2 && FFT[freq_index] > -4}
-								{color = colors[1]}
+								{(color = colors[1])}
 							{:else if FFT[freq_index] < -4 && FFT[freq_index] > -6}
-								{color = colors[2]}
+								{(color = colors[2])}
 							{:else if FFT[freq_index] < -6 && FFT[freq_index] > -8}
-								{color = colors[3]}
+								{(color = colors[3])}
 							{:else if FFT[freq_index] < -8 && FFT[freq_index] > -10}
-								{color = colors[4]}
+								{(color = colors[4])}
 							{:else if FFT[freq_index] < -10 && FFT[freq_index] > -12}
-								{color = colors[5]}
+								{(color = colors[5])}
 							{:else if FFT[freq_index] < -12 && FFT[freq_index] > -20}
-								{color = colors[6]}
+								{(color = colors[6])}
 							{:else if FFT[freq_index] < -14 && FFT[freq_index] > -16}
-								{color = colors[7]}
+								{(color = colors[7])}
 							{:else if FFT[freq_index] < -16 && FFT[freq_index] > -18}
-								{color = colors[8]}
+								{(color = colors[8])}
 							{:else}
-								{color = colors[9]}
+								{(color = colors[9])}
 							{/if}
 							<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
-							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="1" />
+							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2.5" />
 						{/each}
 					{/each}
 				</Canvas>
@@ -192,9 +202,6 @@
 		</div>
 	</div>
 </main>
-
-
-
 
 <style>
 	/*
