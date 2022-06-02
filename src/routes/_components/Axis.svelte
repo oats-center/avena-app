@@ -31,9 +31,9 @@
 
 		ticks.forEach((d) => {
 			if (type === 'x') {
-				context.fillText(d, scale(d), height - margin.bottom + tickSize + 1);
+				context.fillText(d+'MHz', scale(d), height - margin.bottom + tickSize + 1);
 			} else if (type === 'y') {
-				context.fillText(d, margin.left - tickSize - 1, scale(d));
+				context.fillText(d+'ms', margin.left - tickSize - 1, scale(d));
 			}
 		});
 	};

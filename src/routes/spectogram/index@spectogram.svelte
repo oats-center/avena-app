@@ -17,16 +17,20 @@
 	import Point from '../_components/Point.svelte';
 	import Axis from '../_components/Axis.svelte';
 	import { component_subscribe, each, loop_guard } from 'svelte/internal';
-	import { schemeRdYlBu } from 'd3-scale-chromatic';
+	import { interpolateInferno } from 'd3-scale-chromatic';
 	import Index from '../index.svelte';
-	const colors = schemeRdYlBu[10];
+	const colors = interpolateInferno(0.1);
 
 	let colorKey;
+	let CurrentColor;
+	var color;
 	function chooseColor(key) {
-		colorKey = key;
+		// colorKey = key;
+		color = colors[key];
+		return colors[key]
 	}
-	$: color = colors[colorKey];
-	const margin = { top: 10, right: 10, bottom: 25, left: 25 };
+	// $: color = colors[colorKey];
+	const margin = { top: 10, right: 10, bottom: 20, left: 35 };
 
 	let points = [];
 	let width, height;
@@ -51,13 +55,13 @@
 
 	$: x = scaleLinear()
 		// .domain(extent(points, (d) => d.freq))
-		.domain([0, 8])
+		.domain([0, 199])
 		.range([margin.left, width - margin.right])
 		.nice();
 
 	$: y = scaleLinear()
 		// .domain(extent(points, (d) => d.time))
-		.domain([0, 10])
+		.domain([0, 200])
 		.range([height - margin.bottom, margin.top])
 		.nice();
 
@@ -67,52 +71,46 @@
 	<h1>Spectogram</h1>
 </div> -->
 
-<!-- <main>
-  <div>
-      {#each fft_data2 as fft2}
-       {Object.entries(fft2.FFT)}
-       {Object.entries(fft2.FFT).forEach( (index) => { 
-         console.log(index);
-         })}
-       <li>{Data}</li>
-      <li> {[...Array(9).keys()]} </li>
-        <li> {fft2.FFT}</li>
-        <div class="chart-container">
-          <LayerCake
-            padding={{ right: 10, bottom: 20, left: 25 }}
-            x={'FFT'}
-            y={'FFT'}            
-            data={fft2}
-            extents={{ x: [...Array(9).keys()], y: fft2.FFT }}          >
-            <Svg>
-              <AxisX />
-              <AxisY ticks={4} />
-              <Line />
-              <Area />
-            </Svg>
-          </LayerCake>
-        </div>
-      {/each}
-  </div>
-
-	<div class="grid grid-cols-2 gap-2 mb-16">
+<main>
+	<!-- grid grid-cols-2 gap-2 -->
+	<div class="flex flex-row mb-16 ml-8">
 		<div>
 
-			<div class="chart-container">
-				<LayerCake
-					padding={{ right: 10, bottom: 20, left: 25 }}
-					x={xKey}
-					y={yKey}
-					yDomain={[0, null]}
-					data={fft_data}
-				>
-					<Svg>
-						<AxisX />
-						<AxisY ticks={4} />
-						<Line />
-						<Area />
-					</Svg>
-				</LayerCake>
+			<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
+				<Canvas {width} {height}>
+					<Axis type="x" scale={x} tickNumber={10} {margin} />
+					<Axis type="y" scale={y} tickNumber={10} {margin} />
+					<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
+		
+					{#each fft_data as { FFT }, time_index}
+						{#each FFT as { value }, freq_index}
+							<!-- <p>{FFT[freq_index]}, {freq_index}</p> -->
+							{#if FFT[freq_index] > -2}
+								{color = colors[0]}
+							{:else if FFT[freq_index] < -2 && FFT[freq_index] > -4}
+								{color = colors[1]}
+							{:else if FFT[freq_index] < -4 && FFT[freq_index] > -6}
+								{color = colors[2]}
+							{:else if FFT[freq_index] < -6 && FFT[freq_index] > -8}
+								{color = colors[3]}
+							{:else if FFT[freq_index] < -8 && FFT[freq_index] > -10}
+								{color = colors[4]}
+							{:else if FFT[freq_index] < -10 && FFT[freq_index] > -12}
+								{color = colors[5]}
+							{:else if FFT[freq_index] < -12 && FFT[freq_index] > -20}
+								{color = colors[6]}
+							{:else if FFT[freq_index] < -14 && FFT[freq_index] > -16}
+								{color = colors[7]}
+							{:else if FFT[freq_index] < -16 && FFT[freq_index] > -18}
+								{color = colors[8]}
+							{:else}
+								{color = colors[9]}
+							{/if}
+							<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
+							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="1" />
+						{/each}
+					{/each}
+				</Canvas>
 			</div>
 		</div>
 		<div class="container mx-auto">
@@ -183,7 +181,7 @@
 			</div>
 
 			<div>
-				<label class="label">
+				<label class="label max-w-fit">
 					<span class="label-text">Sample Rate</span>
 				</label>
 				<div class="flex flex-row items-center">
@@ -192,56 +190,9 @@
 			</div>
 		</div>
 	</div>
-</main> -->
-
-<!-- <div class="Plot"> -->
-{#each fft_data as { FFT }, time_index}
-	{#each FFT as { value }, freq_index}
-		<p>{FFT[freq_index]}, {freq_index}, {time_index}</p>
-	{/each}
-{/each}
-
-<main>
-
-	<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
-		<Canvas {width} {height}>
-			<Axis type="x" scale={x} tickNumber={20} {margin} />
-			<Axis type="y" scale={y} tickNumber={20} {margin} />
-			<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
-
-			{#each fft_data as { FFT }, time_index}
-				{#each FFT as { value }, freq_index}
-					<!-- <p>{FFT[freq_index]}, {freq_index}</p> -->
-					{#if FFT[freq_index] > -14}
-						{chooseColor(0)}
-					{:else if FFT[freq_index] < -14 && FFT[freq_index] > -15}
-						{chooseColor(1)}
-					{:else if FFT[freq_index] < -15 && FFT[freq_index] > -16}
-						{chooseColor(2)}
-					{:else if FFT[freq_index] < -16 && FFT[freq_index] > -17}
-						{chooseColor(3)}
-					{:else if FFT[freq_index] < -17 && FFT[freq_index] > -18}
-						{chooseColor(4)}
-					{:else if FFT[freq_index] < -18 && FFT[freq_index] > -19}
-						{chooseColor(5)}
-					{:else if FFT[freq_index] < -19 && FFT[freq_index] > -20}
-						{chooseColor(6)}
-					{:else if FFT[freq_index] < -20 && FFT[freq_index] > -21}
-						{chooseColor(7)}
-					{:else if FFT[freq_index] < -21 && FFT[freq_index] > -22}
-						{chooseColor(8)}
-					{:else}
-						{chooseColor(9)}
-					{/if}
-					<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
-
-					<Point x={x(freq_index)} y={y(time_index)} fill={color} r="20" />
-				{/each}
-			{/each}
-		</Canvas>
-	</div>
-
 </main>
+
+
 
 
 <style>
@@ -254,6 +205,6 @@
 	.Plot {
 		width: 100%;
 		height: 100%;
-		background-color: rgb(37, 45, 192);
+		background-color: rgb(62, 67, 163);
 	}
 </style>
