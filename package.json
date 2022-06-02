@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.21.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@smui/button": "^6.0.0-beta.16",
     "@smui/card": "^6.0.0-beta.16",
     "@smui/textfield": "^6.0.0-beta.16",
@@ -39,6 +40,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@rollup/plugin-typescript": "^8.3.2",
     "clean": "^4.0.2",
     "d3-delaunay": "^6.0.2",
     "d3-scale-chromatic": "^3.0.0",

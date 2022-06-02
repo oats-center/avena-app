@@ -28,6 +28,7 @@
 	let points = [];
 	let width, height;
 	import fft_data from './mock_fft.json';
+	// const data = JSON.parse(fft_data);
 	import Index from '../index.svelte';
 	// points = JSON.parse(JSON.stringify(fft_data));
 	points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
@@ -42,7 +43,7 @@
 
 	$: x = scaleLinear()
 		// .domain(extent(points, (d) => d.freq))
-		.domain([0, 9])
+		.domain([0, 8])
 		.range([margin.left, width - margin.right])
 		.nice();
 
@@ -62,11 +63,11 @@
 	<h1>Spectogram</h1>
 </div>
 
-{#each fft_data as { FFT }, time_index}
-	{#each FFT as { fft_point }, freq_index}
-		<p>{fft_point} {freq_index}</p>
+<!-- {#each fft_data as { FFT }, time_index}
+	{#each FFT as value, freq_index}
+		<p>{FFT[freq_index]}, {freq_index}</p>
 	{/each}
-{/each}
+{/each} -->
 
 <!-- <div class="Plot"> -->
 <div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
@@ -74,37 +75,38 @@
 	<Canvas {width} {height}>
 		<!-- <Canvas> -->
 		<!-- <Svg> -->
-		<Axis type="x" scale={x} tickNumber={10} {margin} />
-		<Axis type="y" scale={y} tickNumber={10} {margin} />
+		<Axis type="x" scale={x} tickNumber={20} {margin} />
+		<Axis type="y" scale={y} tickNumber={20} {margin} />
 		<!-- <AxisX ticks={100} />
 			<AxisY ticks={100} /> -->
-		<!-- {#each points as { fft_block }, time_index}
-			{#each fft_block as { fft_point }, freq_index}
-				{#if fft_point > -14}
+		{#each fft_data as { FFT }, time_index}
+			{#each FFT as { value }, freq_index}
+				<p>{FFT[freq_index]}, {freq_index}</p>
+				{#if FFT[freq_index] > -14}
 					{chooseColor(0)}
-				{:else if fft_point < -14 && fft_point > -15}
+				{:else if FFT[freq_index] < -14 && FFT[freq_index] > -15}
 					{chooseColor(1)}
-				{:else if fft_point < -15 && fft_point > -16}
+				{:else if FFT[freq_index] < -15 && FFT[freq_index] > -16}
 					{chooseColor(2)}
-				{:else if fft_point < -16 && fft_point > -17}
+				{:else if FFT[freq_index] < -16 && FFT[freq_index] > -17}
 					{chooseColor(3)}
-				{:else if fft_point < -17 && fft_point > -18}
+				{:else if FFT[freq_index] < -17 && FFT[freq_index] > -18}
 					{chooseColor(4)}
-				{:else if fft_point < -18 && fft_point > -19}
+				{:else if FFT[freq_index] < -18 && FFT[freq_index] > -19}
 					{chooseColor(5)}
-				{:else if fft_point < -19 && fft_point > -20}
+				{:else if FFT[freq_index] < -19 && FFT[freq_index] > -20}
 					{chooseColor(6)}
-				{:else if fft_point < -20 && fft_point > -21}
+				{:else if FFT[freq_index] < -20 && FFT[freq_index] > -21}
 					{chooseColor(7)}
-				{:else if fft_point < -21 && fft_point > -22}
+				{:else if FFT[freq_index] < -21 && FFT[freq_index] > -22}
 					{chooseColor(8)}
 				{:else}
 					{chooseColor(9)}
 				{/if}
-				<Point x={freq_index} y={time_index} fill={color} r="2" />
-			 <Point x={x(freq)} y={3} fill={color} r="2" /> -->
-		<!-- {/each} -->
-		<!-- {/each} -->
+				<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2" />
+				<!-- <Point x={x(freq)} y={3} fill={color} r="2" /> -->
+			{/each}
+		{/each}
 	</Canvas>
 	<!-- </Svg> -->
 	<!-- </LayerCake> -->
