@@ -11,6 +11,7 @@
 	import { Canvas } from 'svelte-canvas';
 	import { extent } from 'd3-array';
 	import { scaleLinear } from 'd3-scale';
+  import { each } from 'svelte/internal';
 
 	import Point from '../_components/Point.svelte';
 	import Axis from '../_components/Axis.svelte';
@@ -27,33 +28,73 @@
 
 	let points = [];
 	let width, height;
+	import fft_data from './mock_fft.json';
+	// const data = JSON.parse(fft_data);
+	import Index from '../index.svelte';
+	// points = JSON.parse(JSON.stringify(fft_data));
+	points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
 
 	// let data = fetch('./mock_fft.json');
 	// let json = data.json();
 
-	// import fft_data from './mock_fft_1.json';
-    import fft_data from './sample1.json';
+	import fft_data from './mock_fft_1.json';
+  // import fft_data from './sample1.json';
+  import fft_data2 from './sample1.json';
 
 	const xKey = 'frequency';
 	const yKey = 'magnitude';
+  // var Data = {};
+  let Data;
 
 	import Index from '../index.svelte';
-	// let FFTpoints = [];
-	// fetch('./sample1.json')
-	// .then()
-	// .then(FFT => FFTpoints = FFT)
+// import Brush from '../_components/Brush.html.svelte';
 
+	$: x = scaleLinear()
+		// .domain(extent(points, (d) => d.freq))
+		.domain([0, 8])
+		.range([margin.left, width - margin.right])
+		.nice();
+
+	$: y = scaleLinear()
+		// .domain(extent(points, (d) => d.time))
+		.domain([0, 10])
+		.range([height - margin.bottom, margin.top])
+		.nice();
 
 </script>
 
+<!-- <div class="spectogram">
+	<h1>Spectogram</h1>
+</div> -->
 
-<main>
-	<!-- {#each FFTpoints as FFTpoint}
-    	<li>{FFTpoint.FFT} to {FFTpoint.FFT}</li>
-    {/each} -->
+<!-- <main>
+  <div>
+      {#each fft_data2 as fft2}
+       {Object.entries(fft2.FFT)}
+       {Object.entries(fft2.FFT).forEach( (index) => { 
+         console.log(index);
+         })}
+       <li>{Data}</li>
+      <li> {[...Array(9).keys()]} </li>
+        <li> {fft2.FFT}</li>
+        <div class="chart-container">
+          <LayerCake
+            padding={{ right: 10, bottom: 20, left: 25 }}
+            x={'FFT'}
+            y={'FFT'}            
+            data={fft2}
+            extents={{ x: [...Array(9).keys()], y: fft2.FFT }}          >
+            <Svg>
+              <AxisX />
+              <AxisY ticks={4} />
+              <Line />
+              <Area />
+            </Svg>
+          </LayerCake>
+        </div>
+      {/each}
+  </div>
 
-
-<!-- 	
 	<div class="grid grid-cols-2 gap-2 mb-16">
 		<div>
 
@@ -150,8 +191,54 @@
 				</div>
 			</div>
 		</div>
-	</div> -->
+	</div>
+</main> -->
+
+<!-- <div class="Plot"> -->
+<main>
+	<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
+		<!-- <LayerCake padding={margin} x={(d) => d.freq} y={(d) => d.time} data={points}> -->
+		<Canvas {width} {height}>
+			<!-- <Canvas> -->
+			<!-- <Svg> -->
+			<Axis type="x" scale={x} tickNumber={20} {margin} />
+			<Axis type="y" scale={y} tickNumber={20} {margin} />
+			<!-- <AxisX ticks={100} />
+				<AxisY ticks={100} /> -->
+			{#each fft_data as { FFT }, time_index}
+				{#each FFT as { value }, freq_index}
+					<p>{FFT[freq_index]}, {freq_index}</p>
+					{#if FFT[freq_index] > -14}
+						{chooseColor(0)}
+					{:else if FFT[freq_index] < -14 && FFT[freq_index] > -15}
+						{chooseColor(1)}
+					{:else if FFT[freq_index] < -15 && FFT[freq_index] > -16}
+						{chooseColor(2)}
+					{:else if FFT[freq_index] < -16 && FFT[freq_index] > -17}
+						{chooseColor(3)}
+					{:else if FFT[freq_index] < -17 && FFT[freq_index] > -18}
+						{chooseColor(4)}
+					{:else if FFT[freq_index] < -18 && FFT[freq_index] > -19}
+						{chooseColor(5)}
+					{:else if FFT[freq_index] < -19 && FFT[freq_index] > -20}
+						{chooseColor(6)}
+					{:else if FFT[freq_index] < -20 && FFT[freq_index] > -21}
+						{chooseColor(7)}
+					{:else if FFT[freq_index] < -21 && FFT[freq_index] > -22}
+						{chooseColor(8)}
+					{:else}
+						{chooseColor(9)}
+					{/if}
+					<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2" />
+					<!-- <Point x={x(freq)} y={3} fill={color} r="2" /> -->
+				{/each}
+			{/each}
+		</Canvas>
+		<!-- </Svg> -->
+		<!-- </LayerCake> -->
+	</div>
 </main>
+
 
 <style>
 	/*

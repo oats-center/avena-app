@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { LayerCake, Svg } from 'layercake';
+	import { Canvas } from 'svelte-canvas';
 	// import { Canvas } from 'layercake';
 
 	import Line from '../_components/Line.svelte';
@@ -8,15 +9,16 @@
 	import AxisY from '../_components/AxisY.svelte';
 
 	import { onMount } from 'svelte';
-	import { Canvas } from 'svelte-canvas';
+	
 	import { extent } from 'd3-array';
 	import { scaleLinear } from 'd3-scale';
-  import { each } from 'svelte/internal';
+    import { each } from 'svelte/internal';
 
 	import Point from '../_components/Point.svelte';
 	import Axis from '../_components/Axis.svelte';
 	import { component_subscribe, each, loop_guard } from 'svelte/internal';
 	import { schemeRdYlBu } from 'd3-scale-chromatic';
+	import Index from '../index.svelte';
 	const colors = schemeRdYlBu[10];
 
 	let colorKey;
@@ -28,23 +30,21 @@
 
 	let points = [];
 	let width, height;
-	import fft_data from './mock_fft.json';
+	// import fft_data from './mock_fft.json';
 	// const data = JSON.parse(fft_data);
-	import Index from '../index.svelte';
+	
 	// points = JSON.parse(JSON.stringify(fft_data));
 	points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
 
 	// let data = fetch('./mock_fft.json');
 	// let json = data.json();
 
-	import fft_data from './mock_fft_1.json';
-  // import fft_data from './sample1.json';
-  import fft_data2 from './sample1.json';
+	// import fft_data from './mock_fft_1.json';
+    // import fft_data from './sample1.json';
+    import fft_data from './sample1.json';
 
 	const xKey = 'frequency';
 	const yKey = 'magnitude';
-  // var Data = {};
-  let Data;
 
 	import Index from '../index.svelte';
 // import Brush from '../_components/Brush.html.svelte';
@@ -67,10 +67,9 @@
 	<h1>Spectogram</h1>
 </div> -->
 
-<main>
+<!-- <main>
   <div>
       {#each fft_data2 as fft2}
-       <!-- {console.log(Object.values(fft2.FFT))} -->
        {Object.entries(fft2.FFT)}
        {Object.entries(fft2.FFT).forEach( (index) => { 
          console.log(index);
@@ -98,8 +97,6 @@
 
 	<div class="grid grid-cols-2 gap-2 mb-16">
 		<div>
-			<!-- {#each fft_data as fft, time_index} -->
-			<!-- <p>{FFT[1]}</p> -->
 
 			<div class="chart-container">
 				<LayerCake
@@ -117,7 +114,6 @@
 					</Svg>
 				</LayerCake>
 			</div>
-			<!-- {/each} -->
 		</div>
 		<div class="container mx-auto">
 			<div>
@@ -196,27 +192,26 @@
 			</div>
 		</div>
 	</div>
-</main>
-<!-- {#each fft_data as { FFT }, time_index}
-	{#each FFT as value, freq_index}
-		<p>{FFT[freq_index]}, {freq_index}</p>
-	{/each}
-{/each} -->
+</main> -->
 
 <!-- <div class="Plot"> -->
+{#each fft_data as { FFT }, time_index}
+	{#each FFT as { value }, freq_index}
+		<p>{FFT[freq_index]}, {freq_index}, {time_index}</p>
+	{/each}
+{/each}
+
 <main>
+
 	<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
-		<!-- <LayerCake padding={margin} x={(d) => d.freq} y={(d) => d.time} data={points}> -->
 		<Canvas {width} {height}>
-			<!-- <Canvas> -->
-			<!-- <Svg> -->
 			<Axis type="x" scale={x} tickNumber={20} {margin} />
 			<Axis type="y" scale={y} tickNumber={20} {margin} />
-			<!-- <AxisX ticks={100} />
-				<AxisY ticks={100} /> -->
+			<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
+
 			{#each fft_data as { FFT }, time_index}
 				{#each FFT as { value }, freq_index}
-					<p>{FFT[freq_index]}, {freq_index}</p>
+					<!-- <p>{FFT[freq_index]}, {freq_index}</p> -->
 					{#if FFT[freq_index] > -14}
 						{chooseColor(0)}
 					{:else if FFT[freq_index] < -14 && FFT[freq_index] > -15}
@@ -238,14 +233,14 @@
 					{:else}
 						{chooseColor(9)}
 					{/if}
-					<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2" />
-					<!-- <Point x={x(freq)} y={3} fill={color} r="2" /> -->
+					<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
+
+					<Point x={x(freq_index)} y={y(time_index)} fill={color} r="20" />
 				{/each}
 			{/each}
 		</Canvas>
-		<!-- </Svg> -->
-		<!-- </LayerCake> -->
 	</div>
+
 </main>
 
 
@@ -256,8 +251,9 @@
 		The point being it needs dimensions since the <LayerCake> element will
 		expand to fill it.
 	*/
-	.chart-container {
+	.Plot {
 		width: 100%;
 		height: 100%;
+		background-color: rgb(37, 45, 192);
 	}
 </style>
