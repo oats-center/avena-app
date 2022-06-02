@@ -40,6 +40,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@rollup/plugin-typescript": "^8.3.2",
     "clean": "^4.0.2",
     "d3-delaunay": "^6.0.2",
     "d3-scale-chromatic": "^3.0.0",
