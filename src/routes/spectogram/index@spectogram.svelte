@@ -23,16 +23,21 @@
 	const colors = [
 		'#000004',
 		'#010005',
-		'#5a116e',
-		'#61136e',
-		'#a22b62',
+		'#180c3c',
+		'#3d0965',
+		'#6f196e',
+		'#85216b',
+		'#c63d4d',
+		'#ca404a',
 		'#d54a41',
 		'#d74b3f',
-		'#e8602d',
-		'#f8890c',
+		'#fb9906',
+		'#fcae12',
+		'#f5db4c',
+		'#f1ed71',
 		'#fcffa4'
 	];
-
+	const color_limit = 15;
 	let colorKey;
 	let CurrentColor;
 	var color;
@@ -61,13 +66,16 @@
 
 	const xKey = 'frequency';
 	const yKey = 'magnitude';
+	const high_limit = -50;
+	const low_limit = -85;
+	const level = (low_limit - high_limit) / color_limit;
 
 	import Index from '../index.svelte';
 	// import Brush from '../_components/Brush.html.svelte';
 
 	$: x = scaleLinear()
 		// .domain(extent(points, (d) => d.freq))
-		.domain([0, 199])
+		.domain([0, 32767])
 		.range([margin.left, width - margin.right])
 		.nice();
 
@@ -95,26 +103,36 @@
 					{#each fft_data as { FFT }, time_index}
 						{#each FFT as { value }, freq_index}
 							<!-- <p>{FFT[freq_index]}, {freq_index}</p> -->
-							{#if FFT[freq_index] > -2}
+							{#if FFT[freq_index] > high_limit}
 								{(color = colors[0])}
-							{:else if FFT[freq_index] < -2 && FFT[freq_index] > -4}
+							{:else if FFT[freq_index] < high_limit && FFT[freq_index] > high_limit - level}
 								{(color = colors[1])}
-							{:else if FFT[freq_index] < -4 && FFT[freq_index] > -6}
+							{:else if FFT[freq_index] < high_limit - level && FFT[freq_index] > high_limit - 2 * level}
 								{(color = colors[2])}
-							{:else if FFT[freq_index] < -6 && FFT[freq_index] > -8}
+							{:else if FFT[freq_index] < high_limit - 2 * level && FFT[freq_index] > high_limit - 3 * level}
 								{(color = colors[3])}
-							{:else if FFT[freq_index] < -8 && FFT[freq_index] > -10}
+							{:else if FFT[freq_index] < high_limit - 3 * level && FFT[freq_index] > high_limit - 4 * level}
 								{(color = colors[4])}
-							{:else if FFT[freq_index] < -10 && FFT[freq_index] > -12}
+							{:else if FFT[freq_index] < high_limit - 4 * level && FFT[freq_index] > high_limit - 5 * level}
 								{(color = colors[5])}
-							{:else if FFT[freq_index] < -12 && FFT[freq_index] > -20}
+							{:else if FFT[freq_index] < high_limit - 5 * level && FFT[freq_index] > high_limit - 6 * level}
 								{(color = colors[6])}
-							{:else if FFT[freq_index] < -14 && FFT[freq_index] > -16}
+							{:else if FFT[freq_index] < high_limit - 6 * level && FFT[freq_index] > high_limit - 7 * level}
 								{(color = colors[7])}
-							{:else if FFT[freq_index] < -16 && FFT[freq_index] > -18}
+							{:else if FFT[freq_index] < high_limit - 7 * level && FFT[freq_index] > high_limit - 8 * level}
 								{(color = colors[8])}
-							{:else}
+							{:else if FFT[freq_index] < high_limit - 8 * level && FFT[freq_index] > high_limit - 9 * level}
 								{(color = colors[9])}
+							{:else if FFT[freq_index] < high_limit - 9 * level && FFT[freq_index] > high_limit - 10 * level}
+								{(color = colors[10])}
+							{:else if FFT[freq_index] < high_limit - 10 * level && FFT[freq_index] > high_limit - 11 * level}
+								{(color = colors[11])}
+							{:else if FFT[freq_index] < high_limit - 11 * level && FFT[freq_index] > high_limit - 12 * level}
+								{(color = colors[12])}
+							{:else if FFT[freq_index] < high_limit - 12 * level && FFT[freq_index] > high_limit - 13 * level}
+								{(color = colors[13])}
+							{:else}
+								{(color = colors[14])}
 							{/if}
 							<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
 							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2.5" />
