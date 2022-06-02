@@ -74,7 +74,7 @@
 <main>
 	<!-- grid grid-cols-2 gap-2 -->
 	<div class="flex flex-row mb-16 ml-8">
-		<div>
+		<div class="basis-1/2">
 
 			<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
 				<Canvas {width} {height}>
@@ -113,7 +113,7 @@
 				</Canvas>
 			</div>
 		</div>
-		<div class="container mx-auto">
+		<div class="basis-1/4 container ml-4 border">
 			<div>
 				<label class="label">
 					<span class="label-text">FFT Size</span>
@@ -179,13 +179,14 @@
 					</div>
 				</div>
 			</div>
-
 			<div>
 				<label class="label max-w-fit">
 					<span class="label-text">Sample Rate</span>
 				</label>
 				<div class="flex flex-row items-center">
+					<div class="basis-10/12">
 					<input type="range" min="0" max="100" value="40" class="range range-primary" />
+				    </div>
 				</div>
 			</div>
 		</div>
@@ -205,6 +206,6 @@
 	.Plot {
 		width: 100%;
 		height: 100%;
-		background-color: rgb(62, 67, 163);
+		background-color: rgb(0, 0, 0);
 	}
 </style>
