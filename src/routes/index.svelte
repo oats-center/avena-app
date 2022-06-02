@@ -1,336 +1,260 @@
-<script>
-    import { each } from 'svelte/internal';
-    import { onMount } from 'svelte';
-    // import Spectogram from "./spectogram.svelte"
-    import '../app.css';
-    import Toggle from './Toggle.svelte'
-    let value = '';
-    let name = 'Input data here';
-    /**
-* @type {boolean | undefined}
-*/
-    let isRadio;
-    let time = new Date();
+<script lang="ts">
+	import { LayerCake, Svg } from 'layercake';
+	// import { Canvas } from 'layercake';
 
-    $: hours = time.getHours();
-    $: minutes = time.getMinutes();
-    $: seconds = time.getSeconds();
-    $: milliseconds = time.getTime();
+	import Line from '../_components/Line.svelte';
+	import Area from '../_components/Area.svelte';
+	import AxisX from '../_components/AxisX.svelte';
+	import AxisY from '../_components/AxisY.svelte';
 
+	import { onMount } from 'svelte';
+	import { Canvas } from 'svelte-canvas';
+	import { extent } from 'd3-array';
+	import { scaleLinear } from 'd3-scale';
+  import { each } from 'svelte/internal';
 
-    onMount(() => {
-      const interval = setInterval(() => {
-        time = new Date();
-      }, 1000);
+	import Point from '../_components/Point.svelte';
+	import Axis from '../_components/Axis.svelte';
+	import { component_subscribe, each, loop_guard } from 'svelte/internal';
+	import { schemeRdYlBu } from 'd3-scale-chromatic';
+	const colors = schemeRdYlBu[10];
 
-      return () => {
-        clearInterval(interval);
-      };
-  	});
-    let InactiveService = [
-      {
-      "name":"abrtd.service",
-      "description":"ABRT Automated Bug Reporting Tool",
-      "load_state":"loaded",
-      "active_state":"active",
-      "sub_state":"running",
-      "followed_by":"",
-      "service_type":"dbus",
-      "status":"",
-      "start_time":1652227207320534,
-      "exit_time":0,
-      "pid":1362,
-      "memory_accounting":true,
-      "memory_current":72404992,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":1777520000
-   }
-    ];
+	let colorKey;
+	function chooseColor(key) {
+		colorKey = key;
+	}
+	$: color = colors[colorKey];
+	const margin = { top: 10, right: 10, bottom: 25, left: 25 };
 
-    let ActiveService = [
-   {
-      "name":"systemd-fsck@dev-disk-by\\x2duuid-f967d22b\\x2d6bdc\\x2d4a3c\\x2d82c7\\x2dcd95531d7503.service",
-      "description":"File System Check on /dev/disk/by-uuid/f967d22b-6bdc-4a3c-82c7-cd95531d7503",
-      "load_state":"loaded",
-      "active_state":"active",
-      "sub_state":"exited",
-      "followed_by":"",
-      "service_type":"oneshot",
-      "status":"",
-      "start_time":1652227201621097,
-      "exit_time":1652227201678553,
-      "pid":1197,
-      "memory_accounting":true,
-      "memory_current":18446744073709551615,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":34619000
-   },
-   {
-      "name":"wg-quick@wgAvena.service",
-      "description":"WireGuard via wg-quick(8) for wgAvena",
-      "load_state":"loaded",
-      "active_state":"failed",
-      "sub_state":"failed",
-      "followed_by":"",
-      "service_type":"oneshot",
-      "status":"",
-      "start_time":1652286149036353,
-      "exit_time":1652286149154830,
-      "pid":57639,
-      "memory_accounting":true,
-      "memory_current":18446744073709551615,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":53775000
-   },
-   {
-      "name":"gssproxy.service",
-      "description":"GSSAPI Proxy Daemon",
-      "load_state":"loaded",
-      "active_state":"active",
-      "sub_state":"running",
-      "followed_by":"",
-      "service_type":"forking",
-      "status":"",
-      "start_time":1652227208244736,
-      "exit_time":0,
-      "pid":1416,
-      "memory_accounting":true,
-      "memory_current":1032192,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":535587000
-   },
-   {
-      "name":"systemd-zram-setup@zram0.service",
-      "description":"Create swap on /dev/zram0",
-      "load_state":"loaded",
-      "active_state":"active",
-      "sub_state":"exited",
-      "followed_by":"",
-      "service_type":"oneshot",
-      "status":"",
-      "start_time":1652227200752611,
-      "exit_time":1652227200770220,
-      "pid":1118,
-      "memory_accounting":true,
-      "memory_current":18446744073709551615,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":15468000
-   },
-   {
-      "name":"abrt-xorg.service",
-      "description":"ABRT Xorg log watcher",
-      "load_state":"loaded",
-      "active_state":"active",
-      "sub_state":"running",
-      "followed_by":"",
-      "service_type":"simple",
-      "status":"",
-      "start_time":1652227207346305,
-      "exit_time":0,
-      "pid":1376,
-      "memory_accounting":true,
-      "memory_current":2297856,
-      "memory_available":18446744073709551615,
-      "cpu_accounting":true,
-      "cpu_shares":18446744073709551615,
-      "cpu_usage_n_sec":4315524000
-   },
-   ];
+	let points = [];
+	let width, height;
+	import fft_data from './mock_fft.json';
+	// const data = JSON.parse(fft_data);
+	import Index from '../index.svelte';
+	// points = JSON.parse(JSON.stringify(fft_data));
+	points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
 
+	// let data = fetch('./mock_fft.json');
+	// let json = data.json();
 
-   function EndService(){
-      const service = ActiveService.shift();
-      InactiveService.push(service);
-      InactiveService = InactiveService;
-      // ActiveService.pop();
-      ActiveService = ActiveService;
-      console.log("End Service");
-   }
+	import fft_data from './mock_fft_1.json';
+  // import fft_data from './sample1.json';
+  import fft_data2 from './sample1.json';
 
-   function StartService(){
-      const Iservice = InactiveService.shift();
-      ActiveService.push(Iservice);
-      ActiveService = ActiveService;
-      // InactiveService.pop();
-      InactiveService = InactiveService;      
-      console.log("Start Service");
-   }
+	const xKey = 'frequency';
+	const yKey = 'magnitude';
+  // var Data = {};
+  let Data;
 
-  //  function IsRunning(){
-      
-  //     if (service.sub_state == "running"){        
-  //       return true;
-  //     }       
-  //     else {
-  //       return false;
-  //       console.log (service.sub_state);
-  //     }
+	import Index from '../index.svelte';
+// import Brush from '../_components/Brush.html.svelte';
 
-  //  }
+	$: x = scaleLinear()
+		// .domain(extent(points, (d) => d.freq))
+		.domain([0, 8])
+		.range([margin.left, width - margin.right])
+		.nice();
 
+	$: y = scaleLinear()
+		// .domain(extent(points, (d) => d.time))
+		.domain([0, 10])
+		.range([height - margin.bottom, margin.top])
+		.nice();
 
-    console.log("Hello world")
-    // console.log(data);
 </script>
 
+<!-- <div class="spectogram">
+	<h1>Spectogram</h1>
+</div> -->
 
 <main>
-    
-    <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Main Dashboard</h2>
-
-      <div class="flex items-center mt-30 mb-16 h-96 border border-base-300 break-before-avoid">
-        <!-- <div class="flex justify-center px-4 py-16 border-t border-base-300">Main Dashboard</div> -->
-        <div class="radial-progress mt-30" style="--value:70; --size:16rem; --thickness: 2px;">CPU Utilization <br> 70%</div>
-        <div class="radial-progress mt-30" style="--value:70; --size:16rem; --thickness: 2rem;">Memory Utilization <br> 80%</div>
-      </div>      
-    <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Active Services</h2>
-    
-    <div class="divider w-full"></div>
-    
-
-      <!-- <div class="grid grid-cols-4 gap-4 mb-16"> -->
-      
-      <div class="grid grid-cols-3 gap-2 mb-16">
-        <div>
-        {#each ActiveService as service}
-        {@const Hour = Math.round((milliseconds - service.start_time/1000)/1000/3600%24)}
-        {@const Min = Math.round((milliseconds - service.start_time/1000)/1000/60%60)}
-        {@const Sec = Math.round((milliseconds - service.start_time/1000)/1000%60)}
-        {@const MemoryShare = Math.round(service.memory_current/service.memory_available*100)%100}
-        <!-- {checked = IsRunning} -->
-        
-
-        <!-- {#if MemoryShare == 100}
-            {MemoryShare = 0};
-          {/if} -->
-          <div class="stats shadow max-w-fit">
-            
-            <div class="stat w-96 break-words">
-              <!-- <div class="stat-figure text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-              </div> -->
-              <div class="stat-title">Service Type</div>
-              <div class="stat-value text-primary text-base truncate">{service.name}</div>
-              <!-- <div class="stat-desc">21% more than last month</div> -->
-            </div>
-            
-            <div class="stat w-64">
-              <!-- <div class="stat-figure text-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              </div> -->
-              <div class="stat-title">Run Time</div>
-              
-              <div class="stat-value text-secondary">{Hour}:{Min}:{Sec}</div>
-              <!-- <div class="stat-desc">21% more than last month</div> -->
-            </div>
-
-            <div class="stat w-64">
-              <div class="stat-value">{(MemoryShare).toFixed(2)}%</div>
-              <div class="stat-title">Memory Usage</div>
-              <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
-            </div>
-            
-            <div class="stat w-64">
-              <!-- <div class="stat-figure text-secondary">
-                <div class="avatar online">
-                  <div class="w-16 rounded-full">
-                    <img src="https://api.lorem.space/image/face?w=128&h=128" />
-                  </div>
-                </div>
-              </div> -->
-              <div class="stat-value">{(service.cpu_usage_n_sec/service.cpu_shares*100).toFixed(2)}%</div>
-              <div class="stat-title">CPU Usage</div>
-              <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
-            </div>
-            <div class="btn-group h-10">          
-              <!-- <Toggle bind:checked={isRadio} let:checked={checked}> -->
-              <Toggle bind:checked={isRadio} let:checked={checked}>
-                 <!-- <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button> -->
-                 <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Pause'}</button>
-              </Toggle>
-              <button on:click={EndService} type="submit" class="w-48 h-fit btn btn-active" > End Service </button>
-             </div>   
-            
-          </div>
-           
-        {/each}
-
+  <div>
+      {#each fft_data2 as fft2}
+       <!-- {console.log(Object.values(fft2.FFT))} -->
+       {Object.entries(fft2.FFT)}
+       {Object.entries(fft2.FFT).forEach( (index) => { 
+         console.log(index);
+         })}
+       <li>{Data}</li>
+      <li> {[...Array(9).keys()]} </li>
+        <li> {fft2.FFT}</li>
+        <div class="chart-container">
+          <LayerCake
+            padding={{ right: 10, bottom: 20, left: 25 }}
+            x={'FFT'}
+            y={'FFT'}            
+            data={fft2}
+            extents={{ x: [...Array(9).keys()], y: fft2.FFT }}          >
+            <Svg>
+              <AxisX />
+              <AxisY ticks={4} />
+              <Line />
+              <Area />
+            </Svg>
+          </LayerCake>
         </div>
+      {/each}
+  </div>
 
-	<!-- <div class="artboard artboard-horizontal phone-4">812×375</div> -->
+	<div class="grid grid-cols-2 gap-2 mb-16">
+		<div>
+			<!-- {#each fft_data as fft, time_index} -->
+			<!-- <p>{FFT[1]}</p> -->
 
-      </div>
+			<div class="chart-container">
+				<LayerCake
+					padding={{ right: 10, bottom: 20, left: 25 }}
+					x={xKey}
+					y={yKey}
+					yDomain={[0, null]}
+					data={fft_data}
+				>
+					<Svg>
+						<AxisX />
+						<AxisY ticks={4} />
+						<Line />
+						<Area />
+					</Svg>
+				</LayerCake>
+			</div>
+			<!-- {/each} -->
+		</div>
+		<div class="container mx-auto">
+			<div>
+				<label class="label">
+					<span class="label-text">FFT Size</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<div class="form-control basis-1/2">
+						<input
+							type="text"
+							placeholder="Type here"
+							class="input input-bordered w-full max-w-xs"
+						/>
+					</div>
+					<div class="dropdown basis-1/2">
+						<label tabindex="0" class="btn m-1">Unit</label>
+						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li><a>Item 1</a></li>
+							<li><a>Item 2</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
 
+			<div>
+				<label class="label">
+					<span class="label-text">Center Frequency</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<div class="form-control basis-1/2">
+						<input
+							type="text"
+							placeholder="Type here"
+							class="input input-bordered w-full max-w-xs"
+						/>
+					</div>
+					<div class="dropdown basis-1/2">
+						<label tabindex="0" class="btn m-1">Unit</label>
+						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li><a>Item 1</a></li>
+							<li><a>Item 2</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
 
-      <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Inactive Services</h2>
-      
-      <div class="divider w-full"></div>
+			<div>
+				<label class="label">
+					<span class="label-text">Gain</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<div class="form-control basis-1/2">
+						<input
+							type="text"
+							placeholder="Type here"
+							class="input input-bordered w-full max-w-xs"
+						/>
+					</div>
+					<div class="dropdown basis-1/2">
+						<label tabindex="0" class="btn m-1">Unit</label>
+						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li><a>Item 1</a></li>
+							<li><a>Item 2</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
 
-      <div class="grid grid-cols-3 gap-2 mb-16">
-        <div>
-          {#each InactiveService as Iservice}
-          {@const Hour = Math.round((milliseconds - Iservice.start_time/1000)/1000/3600%24)}
-          {@const Min = Math.round((milliseconds - Iservice.start_time/1000)/1000/60%60)}
-          {@const Sec = Math.round((milliseconds - Iservice.start_time/1000)/1000%60)}
-          {@const MemoryShare = Math.round(Iservice.memory_current/Iservice.memory_available*100)%100}
-          <!-- {checked = IsRunning} -->
-          
-  
-          <!-- {#if MemoryShare == 100}
-              {MemoryShare = 0};
-            {/if} -->
-            <div class="stats shadow max-w-fit">
-              
-              <div class="stat w-96 break-words">
-                <!-- <div class="stat-figure text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                </div> -->
-                <div class="stat-title">Service Type</div>
-                <div class="stat-value text-primary text-base truncate">{Iservice.name}</div>
-                <!-- <div class="stat-desc">21% more than last month</div> -->
-              </div>
-              
-              <div class="stat w-64">
-                <!-- <div class="stat-figure text-secondary">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div> -->
-                <div class="stat-title">State</div>
-                
-                <div class="stat-value text-secondary">Inactive</div>
-                <!-- <div class="stat-desc">21% more than last month</div> -->
-              </div>
-  
-              <!-- <div class="stat w-64">
-                <div class="stat-value">{(MemoryShare).toFixed(2)}%</div>
-                <div class="stat-title">Memory Usage</div>
-              </div> -->
-              
-              <div class="btn-group h-10">          
-                <!-- <Toggle bind:checked={isRadio} let:checked={checked}>
-                   <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button>
-                </Toggle> -->
-                <button on:click={StartService} type="submit" class="w-48 h-fit btn btn-active" > Start Service </button>
-               </div>   
-              
-            </div>
-
-
-
-          {/each}
-
-        </div>
-      </div>
-
+			<div>
+				<label class="label">
+					<span class="label-text">Sample Rate</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<input type="range" min="0" max="100" value="40" class="range range-primary" />
+				</div>
+			</div>
+		</div>
+	</div>
 </main>
+<!-- {#each fft_data as { FFT }, time_index}
+	{#each FFT as value, freq_index}
+		<p>{FFT[freq_index]}, {freq_index}</p>
+	{/each}
+{/each} -->
 
+<!-- <div class="Plot"> -->
+<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
+	<!-- <LayerCake padding={margin} x={(d) => d.freq} y={(d) => d.time} data={points}> -->
+	<Canvas {width} {height}>
+		<!-- <Canvas> -->
+		<!-- <Svg> -->
+		<Axis type="x" scale={x} tickNumber={20} {margin} />
+		<Axis type="y" scale={y} tickNumber={20} {margin} />
+		<!-- <AxisX ticks={100} />
+			<AxisY ticks={100} /> -->
+		{#each fft_data as { FFT }, time_index}
+			{#each FFT as { value }, freq_index}
+				<p>{FFT[freq_index]}, {freq_index}</p>
+				{#if FFT[freq_index] > -14}
+					{chooseColor(0)}
+				{:else if FFT[freq_index] < -14 && FFT[freq_index] > -15}
+					{chooseColor(1)}
+				{:else if FFT[freq_index] < -15 && FFT[freq_index] > -16}
+					{chooseColor(2)}
+				{:else if FFT[freq_index] < -16 && FFT[freq_index] > -17}
+					{chooseColor(3)}
+				{:else if FFT[freq_index] < -17 && FFT[freq_index] > -18}
+					{chooseColor(4)}
+				{:else if FFT[freq_index] < -18 && FFT[freq_index] > -19}
+					{chooseColor(5)}
+				{:else if FFT[freq_index] < -19 && FFT[freq_index] > -20}
+					{chooseColor(6)}
+				{:else if FFT[freq_index] < -20 && FFT[freq_index] > -21}
+					{chooseColor(7)}
+				{:else if FFT[freq_index] < -21 && FFT[freq_index] > -22}
+					{chooseColor(8)}
+				{:else}
+					{chooseColor(9)}
+				{/if}
+				<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2" />
+				<!-- <Point x={x(freq)} y={3} fill={color} r="2" /> -->
+			{/each}
+		{/each}
+	</Canvas>
+	<!-- </Svg> -->
+	<!-- </LayerCake> -->
+</div>
 
+<style>
+	/*
+		The wrapper div needs to have an explicit width and height in CSS.
+		It can also be a flexbox child or CSS grid element.
+		The point being it needs dimensions since the <LayerCake> element will
+		expand to fill it.
+	*/
+	.chart-container {
+		width: 100%;
+		height: 100%;
+	}
+</style>

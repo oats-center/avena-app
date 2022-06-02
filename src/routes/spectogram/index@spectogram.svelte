@@ -67,10 +67,9 @@
 	<h1>Spectogram</h1>
 </div> -->
 
-<main>
+<!-- <main>
   <div>
       {#each fft_data2 as fft2}
-       <!-- {console.log(Object.values(fft2.FFT))} -->
        {Object.entries(fft2.FFT)}
        {Object.entries(fft2.FFT).forEach( (index) => { 
          console.log(index);
@@ -98,8 +97,6 @@
 
 	<div class="grid grid-cols-2 gap-2 mb-16">
 		<div>
-			<!-- {#each fft_data as fft, time_index} -->
-			<!-- <p>{FFT[1]}</p> -->
 
 			<div class="chart-container">
 				<LayerCake
@@ -117,7 +114,6 @@
 					</Svg>
 				</LayerCake>
 			</div>
-			<!-- {/each} -->
 		</div>
 		<div class="container mx-auto">
 			<div>
@@ -196,12 +192,7 @@
 			</div>
 		</div>
 	</div>
-</main>
-<!-- {#each fft_data as { FFT }, time_index}
-	{#each FFT as value, freq_index}
-		<p>{FFT[freq_index]}, {freq_index}</p>
-	{/each}
-{/each} -->
+</main> -->
 
 <!-- <div class="Plot"> -->
 <div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
