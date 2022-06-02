@@ -11,6 +11,7 @@
 	import { Canvas } from 'svelte-canvas';
 	import { extent } from 'd3-array';
 	import { scaleLinear } from 'd3-scale';
+  import { each } from 'svelte/internal';
 
 	import Point from '../_components/Point.svelte';
 	import Axis from '../_components/Axis.svelte';
@@ -32,22 +33,16 @@
 	// let json = data.json();
 
 	import fft_data from './mock_fft_1.json';
+  // import fft_data from './sample1.json';
+  import fft_data2 from './sample1.json';
 
 	const xKey = 'frequency';
 	const yKey = 'magnitude';
+  // var Data = {};
+  let Data;
 
 	import Index from '../index.svelte';
-
-	// points = JSON.parse(JSON.stringify(fft_data));
-	// points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
-
-	// onMount(() =>
-	// fetch('https://raw.githubusercontent.com/vega/vega/master/docs/data/cars.json')
-	// fetch('./mock_fft.json')
-	// .map((d, id) => ({ freq: d.frequency, mag: d.magnitude, time: d.time, id }))
-	// .filter((d) => d.freq && d.mag && d.time);
-	// 		})
-	// );
+// import Brush from '../_components/Brush.html.svelte';
 
 	$: x = scaleLinear()
 		// .domain(extent(points, (d) => d.freq))
@@ -61,11 +56,6 @@
 		.range([height - margin.bottom, margin.top])
 		.nice();
 
-	// $: z = scaleLinear()
-	// 	.domain(extent(points, (d) => d.mag))
-	// 	.range([height - margin.bottom, margin.top])
-	// 	.nice();
-	// console.log(data);
 </script>
 
 <!-- <div class="spectogram">
@@ -73,6 +63,34 @@
 </div> -->
 
 <main>
+  <div>
+      {#each fft_data2 as fft2}
+       <!-- {console.log(Object.values(fft2.FFT))} -->
+       {Object.entries(fft2.FFT)}
+       {Object.entries(fft2.FFT).forEach( (index) => { 
+         console.log(index);
+         })}
+       <li>{Data}</li>
+      <li> {[...Array(9).keys()]} </li>
+        <li> {fft2.FFT}</li>
+        <div class="chart-container">
+          <LayerCake
+            padding={{ right: 10, bottom: 20, left: 25 }}
+            x={'FFT'}
+            y={'FFT'}            
+            data={fft2}
+            extents={{ x: [...Array(9).keys()], y: fft2.FFT }}          >
+            <Svg>
+              <AxisX />
+              <AxisY ticks={4} />
+              <Line />
+              <Area />
+            </Svg>
+          </LayerCake>
+        </div>
+      {/each}
+  </div>
+
 	<div class="grid grid-cols-2 gap-2 mb-16">
 		<div>
 			<!-- {#each fft_data as fft, time_index} -->
