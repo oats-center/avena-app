@@ -73,7 +73,7 @@
 
 	$: y = scaleLinear()
 		// .domain(extent(points, (d) => d.time))
-		.domain([0, 200])
+		.domain([0, 100])
 		.range([height - margin.bottom, margin.top])
 		.nice();
 </script>
@@ -85,13 +85,12 @@
 <main>
 	<!-- grid grid-cols-2 gap-2 -->
 	<div class="flex flex-row mb-16 ml-8">
-		<div class="basis-1/2">
+		<div class="basis-1/2 max-h-52">
 			<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
 				<Canvas {width} {height}>
 					<Axis type="x" scale={x} tickNumber={10} {margin} />
 					<Axis type="y" scale={y} tickNumber={10} {margin} />
 					<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
-
 					{#each fft_data as { FFT }, time_index}
 						{#each FFT as { value }, freq_index}
 							<!-- <p>{FFT[freq_index]}, {freq_index}</p> -->
@@ -117,7 +116,7 @@
 								{(color = colors[9])}
 							{/if}
 							<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
-							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2.5" />
+							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="1.5" />
 						{/each}
 					{/each}
 				</Canvas>
@@ -145,7 +144,6 @@
 					</div>
 				</div>
 			</div>
-
 			<div>
 				<label class="label">
 					<span class="label-text">Center Frequency</span>
