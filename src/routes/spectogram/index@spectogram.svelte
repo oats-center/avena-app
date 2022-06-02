@@ -14,7 +14,7 @@
 
 	import Point from '../_components/Point.svelte';
 	import Axis from '../_components/Axis.svelte';
-	import { each, loop_guard } from 'svelte/internal';
+	import { component_subscribe, each, loop_guard } from 'svelte/internal';
 	import { schemeRdYlBu } from 'd3-scale-chromatic';
 	const colors = schemeRdYlBu[10];
 
@@ -27,10 +27,19 @@
 
 	let points = [];
 	let width, height;
-	import fft_data from './mock_fft.json';
+
+	// let data = fetch('./mock_fft.json');
+	// let json = data.json();
+
+	import fft_data from './mock_fft_1.json';
+
+	const xKey = 'frequency';
+	const yKey = 'magnitude';
+
 	import Index from '../index.svelte';
+
 	// points = JSON.parse(JSON.stringify(fft_data));
-	points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
+	// points = fft_data.map((d, id) => ({ fft_block: d.FFT, id })).filter((d) => d.fft_block);
 
 	// onMount(() =>
 	// fetch('https://raw.githubusercontent.com/vega/vega/master/docs/data/cars.json')
@@ -56,64 +65,125 @@
 	// 	.domain(extent(points, (d) => d.mag))
 	// 	.range([height - margin.bottom, margin.top])
 	// 	.nice();
+	// console.log(data);
 </script>
 
-<div class="spectogram">
+<!-- <div class="spectogram">
 	<h1>Spectogram</h1>
-</div>
+</div> -->
 
-{#each fft_data as { FFT }, time_index}
-	{#each FFT as { fft_point }, freq_index}
-		<p>{fft_point} {freq_index}</p>
-	{/each}
-{/each}
+<main>
+	<div class="grid grid-cols-2 gap-2 mb-16">
+		<div>
+			<!-- {#each fft_data as fft, time_index} -->
+			<!-- <p>{FFT[1]}</p> -->
 
-<!-- <div class="Plot"> -->
-<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
-	<!-- <LayerCake padding={margin} x={(d) => d.freq} y={(d) => d.time} data={points}> -->
-	<Canvas {width} {height}>
-		<!-- <Canvas> -->
-		<!-- <Svg> -->
-		<Axis type="x" scale={x} tickNumber={10} {margin} />
-		<Axis type="y" scale={y} tickNumber={10} {margin} />
-		<!-- <AxisX ticks={100} />
-			<AxisY ticks={100} /> -->
-		<!-- {#each points as { fft_block }, time_index}
-			{#each fft_block as { fft_point }, freq_index}
-				{#if fft_point > -14}
-					{chooseColor(0)}
-				{:else if fft_point < -14 && fft_point > -15}
-					{chooseColor(1)}
-				{:else if fft_point < -15 && fft_point > -16}
-					{chooseColor(2)}
-				{:else if fft_point < -16 && fft_point > -17}
-					{chooseColor(3)}
-				{:else if fft_point < -17 && fft_point > -18}
-					{chooseColor(4)}
-				{:else if fft_point < -18 && fft_point > -19}
-					{chooseColor(5)}
-				{:else if fft_point < -19 && fft_point > -20}
-					{chooseColor(6)}
-				{:else if fft_point < -20 && fft_point > -21}
-					{chooseColor(7)}
-				{:else if fft_point < -21 && fft_point > -22}
-					{chooseColor(8)}
-				{:else}
-					{chooseColor(9)}
-				{/if}
-				<Point x={freq_index} y={time_index} fill={color} r="2" />
-			 <Point x={x(freq)} y={3} fill={color} r="2" /> -->
-		<!-- {/each} -->
-		<!-- {/each} -->
-	</Canvas>
-	<!-- </Svg> -->
-	<!-- </LayerCake> -->
-</div>
+			<div class="chart-container">
+				<LayerCake
+					padding={{ right: 10, bottom: 20, left: 25 }}
+					x={xKey}
+					y={yKey}
+					yDomain={[0, null]}
+					data={fft_data}
+				>
+					<Svg>
+						<AxisX />
+						<AxisY ticks={4} />
+						<Line />
+						<Area />
+					</Svg>
+				</LayerCake>
+			</div>
+			<!-- {/each} -->
+		</div>
+		<div class="container mx-auto">
+			<div>
+				<label class="label">
+					<span class="label-text">FFT Size</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<div class="form-control basis-1/2">
+						<input
+							type="text"
+							placeholder="Type here"
+							class="input input-bordered w-full max-w-xs"
+						/>
+					</div>
+					<div class="dropdown basis-1/2">
+						<label tabindex="0" class="btn m-1">Unit</label>
+						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li><a>Item 1</a></li>
+							<li><a>Item 2</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<label class="label">
+					<span class="label-text">Center Frequency</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<div class="form-control basis-1/2">
+						<input
+							type="text"
+							placeholder="Type here"
+							class="input input-bordered w-full max-w-xs"
+						/>
+					</div>
+					<div class="dropdown basis-1/2">
+						<label tabindex="0" class="btn m-1">Unit</label>
+						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li><a>Item 1</a></li>
+							<li><a>Item 2</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<label class="label">
+					<span class="label-text">Gain</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<div class="form-control basis-1/2">
+						<input
+							type="text"
+							placeholder="Type here"
+							class="input input-bordered w-full max-w-xs"
+						/>
+					</div>
+					<div class="dropdown basis-1/2">
+						<label tabindex="0" class="btn m-1">Unit</label>
+						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li><a>Item 1</a></li>
+							<li><a>Item 2</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<label class="label">
+					<span class="label-text">Sample Rate</span>
+				</label>
+				<div class="flex flex-row items-center">
+					<input type="range" min="0" max="100" value="40" class="range range-primary" />
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
 
 <style>
-	.Plot {
+	/*
+		The wrapper div needs to have an explicit width and height in CSS.
+		It can also be a flexbox child or CSS grid element.
+		The point being it needs dimensions since the <LayerCake> element will
+		expand to fill it.
+	*/
+	.chart-container {
 		width: 100%;
 		height: 100%;
-		background-color: rgba(8, 22, 103, 0.636);
 	}
 </style>

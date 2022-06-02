@@ -18,10 +18,18 @@
         text-align: center;
     }
     main {
-        display: flex;
+        /* display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 20px auto;
+        margin: 50px auto; */
+
+        display: flex;
+        flex: 1;
+        align-items: left;
+		flex-direction: column;
+		width: 100%;
+		margin: 50 auto;
+		box-sizing: border-box;
     }
     footer {
         display:flex;
