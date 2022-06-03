@@ -112,6 +112,10 @@
 						<Line />
 						<Area />
 					</Svg>
+
+					<Canvas>
+						 .... 
+					</Canvas>
 				</LayerCake>
 			</div>
 		</div>

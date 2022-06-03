@@ -22,12 +22,12 @@
 			}
 		});
 
-		context.strokeStyle = 'white';
+		context.strokeStyle = 'black';
 		context.stroke();
 
 		context.textAlign = type === 'x' ? 'center' : 'right';
 		context.textBaseline = type === 'x' ? 'top' : 'middle';
-		context.fillStyle = 'white';
+		context.fillStyle = 'black';
 
 		ticks.forEach((d) => {
 			if (type === 'x') {

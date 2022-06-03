@@ -9,7 +9,8 @@
   
     /** @type {String} [stroke='#ab00d6'] - The shape's fill color. This is technically optional because it comes with a default value but you'll likely want to replace it with your own color. */
     // export let stroke = '#ffffff';
-    export let stroke = '#ab00d6';
+    // export let stroke = '#ab00d6';
+    export let stroke = 'black';
     // export let stroke = {primary-focus};
   
     $: path = 'M' + $data
