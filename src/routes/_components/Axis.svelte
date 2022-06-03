@@ -22,17 +22,18 @@
 			}
 		});
 
-		context.strokeStyle = 'black';
+		context.strokeStyle = '#666';
 		context.stroke();
 
 		context.textAlign = type === 'x' ? 'center' : 'right';
 		context.textBaseline = type === 'x' ? 'top' : 'middle';
-		context.fillStyle = 'black';
+		context.fillStyle = '#666';
 
 		ticks.forEach((d) => {
 			if (type === 'x') {
 				context.fillText(d+'MHz', scale(d), height - margin.bottom + tickSize + 1);
 			} else if (type === 'y') {
+				context.font = "12px Arial";
 				context.fillText(d+'ms', margin.left - tickSize - 1, scale(d));
 			}
 		});

@@ -128,7 +128,7 @@
 
 				<Canvas {width} {height}>
 					<!-- <Axis type="x" scale={x} tickNumber={10} {margin} /> -->
-					<Axis type="y" scale={y} tickNumber={10} {margin} />
+					<Axis type="y" scale={y} tickNumber={5} {margin} />
 					
 					<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
 					{#each fft_data as { FFT }, time_index}
