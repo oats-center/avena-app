@@ -69,11 +69,11 @@
 				/>
 			{/if}
 			<text
-				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0} 
 				y={yTick}
 				dx=""
 				dy=""
-				text-anchor={textAnchor(i)}>{formatTick(tick)}</text
+				text-anchor={textAnchor(i)}>{formatTick(tick)}{"Mhz"}</text
 			>
 		</g>
 	{/each}

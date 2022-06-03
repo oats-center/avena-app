@@ -151,7 +151,7 @@ import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 					</polyline>
 				</svg> -->
 				<Canvas {width} {height}>
-					<Axis type="x" scale={x} tickNumber={10} {margin} />
+					<!-- <Axis type="x" scale={x} tickNumber={10} {margin} /> -->
 					<Axis type="y" scale={y} tickNumber={10} {margin} />
 					
 					<!-- <Point x={x(0)} y={y(0)} fill="#ffffff" r="2" /> -->
