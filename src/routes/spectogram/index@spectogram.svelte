@@ -73,7 +73,7 @@
 	const level = (low_limit - high_limit) / color_limit;
 
 	import Index from '../index.svelte';
-import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
+	import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 	// import Brush from '../_components/Brush.html.svelte';
 
 	$: x = scaleLinear()
@@ -87,6 +87,10 @@ import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 		.domain([0, 50])
 		.range([height - margin.bottom, margin.top])
 		.nice();
+
+	Object.values(fft_data)[1].FFT.forEach((element, index) => {Line_data.push({x: index, y: element})})
+
+
 </script>
 
 <!-- <div class="spectogram">
@@ -101,9 +105,7 @@ import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 			<!-- {console.log(Object.values(fft_data)[1].FFT.concat([...Array(200).keys()]))} -->
 			<!-- {Line_data["y"] =  Object.values(fft_data)[1].FFT} -->
 
-			{Object.values(fft_data)[1].FFT.forEach((element, index) => {
-				Line_data.push({x: index, y: element})
-				})} 
+			<!-- {Object.values(fft_data)[1].FFT.forEach((element, index) => {Line_data.push({x: index, y: element})})}  -->
 
 			<div class="Plot" bind:clientWidth={width} bind:clientHeight={height}>
 			<LayerCake>
@@ -124,32 +126,6 @@ import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 					</Svg>
 				</LayerCake>
 
-
-
-				<!-- <svg width={width} height={height}> -->
-					<!-- x axis -->
-					<!-- <line x1="0" x2="300" y1="100" y2="100"></line>
-					<g class="x" transform="translate(0,120)">
-						<text x="0">0</text>
-						<text x="60">2</text>
-						<text x="120">4</text>
-						<text x="180">6</text>
-						<text x="240">8</text>
-						<text x="300">10</text>
-					</g> -->
-					
-					<!-- y axis -->
-					<!-- <line x1="0" x2="0" y1="0" y2="100"></line>
-					<g class="y" transform="translate(-10,0)">
-						<text y="100">0</text>
-						<text y="50">50</text>
-						<text y="0">100</text>
-					</g> -->
-
-					<!-- data -->
-					<!-- <polyline style="stroke: red; stroke-width: 2" points={Line_data}>
-					</polyline>
-				</svg> -->
 				<Canvas {width} {height}>
 					<!-- <Axis type="x" scale={x} tickNumber={10} {margin} /> -->
 					<Axis type="y" scale={y} tickNumber={10} {margin} />
@@ -190,7 +166,7 @@ import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 								{(color = colors[0])}
 							{/if}
 							<!-- <Point x='100' y='100' fill='#ffffff' r="20" /> -->
-							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="1.5" />
+							<Point x={x(freq_index)} y={y(time_index)} fill={color} r="2" />
 						{/each}
 					{/each}
 				</Canvas>
@@ -306,6 +282,8 @@ import LayercakeLineD3 from '../_components/layercake-Line-D3.svelte';
 	.y text {
 		text-anchor: end;
 		dominant-baseline: middle;
+		font-size: 0.725em;
+		font-weight: 200;
 	}
 
 </style>
