@@ -1,9 +1,6 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-		letterSpacing: {
-			logo: '-0.15em'
-		},
 		fontFamily: {
 			logo: ['B612 Mono', 'monospace']
 		},
