@@ -17,7 +17,7 @@
 	// FIXME: This is how NOT to do it
 	onMount(async () => {
 		// to create a connection to a nats-server:
-		nc = await connect({ servers: 'ws://172.16.0.4:443' });
+		nc = await connect({ servers: 'ws://172.16.2.1:443' });
 		// const nc = await connect({ servers: 'demo.nats.io:4223' });
 
 		// create a codec
@@ -27,11 +27,16 @@
 		// matching the subscription
 		const sub = nc.subscribe('sdr.fft');
 		for await (const m of sub) {
-			const { fft, span, fc, fft_size } = jc.decode(m.data) as {
-				fft: number[];
-				fc: number;
-				span: number;
-				fft_size: number;
+			const {
+				FFT: fft,
+				Span: span,
+				Fc: fc,
+				FFT_size: fft_size
+			} = jc.decode(m.data) as {
+				FFT: number[];
+				Fc: number;
+				Span: number;
+				FFT_size: number;
 			};
 
 			data = fft.map((y, i) => ({
