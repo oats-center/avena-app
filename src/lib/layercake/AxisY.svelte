@@ -1,7 +1,3 @@
-<!--
-  @component
-  Generates an HTML y-axis.
- -->
 <script>
 	import { getContext } from 'svelte';
 
@@ -73,7 +69,7 @@
 				y={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 				dx={isBandwidth ? -9 : dxTick}
 				dy={isBandwidth ? 4 : dyTick}
-				style="text-anchor:{isBandwidth ? 'end' : textAnchor};">{formatTick(tick)}{"dB"}</text
+				style="text-anchor:{isBandwidth ? 'end' : textAnchor};">{formatTick(tick)}</text
 			>
 		</g>
 	{/each}

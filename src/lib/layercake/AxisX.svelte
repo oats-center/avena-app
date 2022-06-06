@@ -1,7 +1,3 @@
-<!--
-  @component
-  Generates an SVG x-axis. This component is also configured to detect if your x-scale is an ordinal scale. If so, it will place the markers in the middle of the bandwidth.
- -->
 <script>
 	import { getContext } from 'svelte';
 	const { width, height, xScale, yRange } = getContext('LayerCake');
@@ -69,11 +65,11 @@
 				/>
 			{/if}
 			<text
-				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0} 
+				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
 				y={yTick}
 				dx=""
 				dy=""
-				text-anchor={textAnchor(i)}>{formatTick(tick)}{"Mhz"}</text
+				text-anchor={textAnchor(i)}>{formatTick(tick)}</text
 			>
 		</g>
 	{/each}
@@ -86,7 +82,7 @@
 	.tick {
 		/* font-size: 0.725em; */
 		font-size: 12px;
-		font-family: Arial ;
+		font-family: Arial;
 		/* font-weight: 200; */
 	}
 

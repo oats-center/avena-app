@@ -28,6 +28,7 @@
 				<div class="w-20 lg:hidden">
 					<AvenaLogo />
 				</div>
+				<h1 class="font-semibold">Spectrum Analyzer</h1>
 			</div>
 
 			<!-- Right navbar -->
@@ -50,9 +51,9 @@
 		</nav>
 
 		<!-- App area -->
-		<div class="flex-1">
+		<main class="flex-1">
 			<slot />
-		</div>
+		</main>
 
 		<!-- Footer -->
 		<footer class="footer p-4 flex gap-6 justify-center">
@@ -108,11 +109,11 @@
 					</a>
 				</li>
 				<li>
-					<a href="/spectogram" class="flex gap-4">
+					<a href="/spectrum" class="flex gap-4">
 						<span class="flex-none">
 							<SpectrumIcon class="fill-current w-8 h-8" />
 						</span>
-						<span class="flex-1">Spectrogram</span>
+						<span class="flex-1">Spectrum Analyzer</span>
 					</a>
 				</li>
 			</ul>
