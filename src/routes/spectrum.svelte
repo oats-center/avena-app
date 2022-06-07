@@ -13,6 +13,8 @@
 	import Line from '$lib/layercake/Line.svelte';
 
 	let nc: NatsConnection;
+	let fc_value = 90;
+	const jc = JSONCodec();
 
 	// FIXME: This is how NOT to do it
 	onMount(async () => {
@@ -21,7 +23,7 @@
 		// const nc = await connect({ servers: 'demo.nats.io:4223' });
 
 		// create a codec
-		const jc = JSONCodec();
+		// const jc = JSONCodec();
 
 		// create a simple subscriber and iterate over messages
 		// matching the subscription
@@ -48,53 +50,84 @@
 		}
 	});
 
-	/*
-	$: {
-		if (nc) {
-			nc.publish('sdr.freq', { freq: THE_VARIABLE });
-		}
+	
+	// $: {
+	// 	if (nc) {
+	// 		nc.publish('sdr.freq', JSON.stringify({ freq: fc_value * 1000000 }));
+	// 		console.log("Update");
+	// 	}
+	// }
+
+	function UpdateFc() {
+
+		var Fc = fc_value * 1000000;
+
+		console.log(Fc)
+		console.log("Updated")
+
+		nc.publish('sdr.freq', jc.encode({ freq: Fc }));
 	}
-	*/
+
+	
+	
 
 	let data: Array<{ x: number; y: number }> = [];
 
 	// let fScale = scaleLinear();
 </script>
 
+
 <div class="w-full h-full flex flex-col">
-	<!-- xScale={fScale} -->
-	<LayerCake
-		{data}
-		x="x"
-		y="y"
-		z="y"
-		yDomain={[-8, 5]}
-		padding={{ left: 35, right: 10, bottom: 20 }}
-	>
-		<Svg>
-			<AxisX formatTick={(d) => `${format('~s')(d)}Hz`} />
-			<AxisY formatTick={(d) => `${d} dB`} />
-			<Line />
-			<!-- <Area /> -->
-		</Svg>
-	</LayerCake>
+	<!-- <div class="basis-3/4 max-h-96"> -->
+		<!-- xScale={fScale} -->
+		<LayerCake
+			{data}
+			x="x"
+			y="y"
+			z="y"
+			yDomain={[-8, 5]}
+			padding={{ left: 35, right: 10, bottom: 20 }}
+		>
+			<Svg>
+				<AxisX formatTick={(d) => `${format('~s')(d)}Hz`} />
+				<AxisY formatTick={(d) => `${d} dB`} />
+				<Line />
+				<!-- <Area /> -->
+			</Svg>
+		</LayerCake>
 
-	<!-- xScale={fScale} -->
-	<LayerCake
-		{data}
-		x="x"
-		y="y"
-		z="y"
-		yDomain={[20, 0]}
-		zRange={[0, 1]}
-		padding={{ left: 35, right: 10, bottom: 20 }}
-	>
-		<Svg>
-			<AxisY gridlines={false} tickMarks={true} formatTick={(d) => `${format('~s')(d)} s`} />
-		</Svg>
+		<!-- xScale={fScale} -->
+		<LayerCake
+			{data}
+			x="x"
+			y="y"
+			z="y"
+			yDomain={[20, 0]}
+			zRange={[0, 1]}
+			padding={{ left: 35, right: 10, bottom: 20 }}
+		>
+			<Svg>
+				<AxisY gridlines={false} tickMarks={true} formatTick={(d) => `${format('~s')(d)} s`} />
+			</Svg>
 
-		<Canvas>
-			<Spectrogram />
-		</Canvas>
-	</LayerCake>
+			<Canvas>
+				<Spectrogram />
+			</Canvas>
+		</LayerCake>
+
+		<h1>
+			{fc_value}
+		</h1>
+		<input bind:value={fc_value} on:change={() => UpdateFc()} type="range" min="90" max="100" class="range" step="1" />
+		<div class="flex justify-between text-xs px-2">
+			<span>|</span>
+			<span>|</span>
+			<span>|</span>
+			<span>|</span>
+			<span>|</span>
+		</div>
+
+	<!-- <div class="w-full h-full">
+		
+	</div> -->
 </div>
