@@ -30,24 +30,31 @@
 		// matching the subscription
 		const sub = nc.subscribe('sdr.fft');
 		for await (const m of sub) {
-			const {
-				FFT: fft,
-				Span: span,
-				Fc: fc,
-				FFT_size: fft_size
-			} = jc.decode(m.data) as {
-				FFT: number[];
-				Fc: number;
-				Span: number;
-				FFT_size: number;
+			const { fft, span, fc, fft_size } = jc.decode(m.data) as {
+				fft: string;
+				fc: number;
+				span: number;
+				fft_size: number;
 			};
 
-			data = fft.map((y, i) => ({
-				x: fc - span / 2.0 + (i * span) / fft_size,
-				y: Math.log(y / 10000)
-			}));
+			// let tmp = [];
 
-			// fScale = scaleLinear().domain([fc - span / 2, fc + span / 2]);
+			let array = Uint8Array.from(window.atob(fft), (c) => c.charCodeAt(0));
+			let dv = new DataView(array.buffer);
+
+			data = [];
+			for (let i = 0; i < array.length; i++) {
+				data = [
+					...data,
+					{
+						x: fc - span / 2.0 + (i * span) / fft_size,
+						y: Math.log(dv.getUint16(i, true) / 10000)
+					}
+				];
+				i++;
+			}
+
+			// data = tmp;
 		}
 	});
 
