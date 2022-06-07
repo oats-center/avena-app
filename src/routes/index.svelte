@@ -188,14 +188,14 @@
 
 <main>
     
-    <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Main Dashboard</h2>
+    <h2 class="font-large font-semibold leading-tight text-2xl ml-2 mt-0 mb-2">Main Dashboard</h2>
 
       <div class="flex items-center mt-30 mb-16 h-96 border border-base-300 break-before-avoid">
         <!-- <div class="flex justify-center px-4 py-16 border-t border-base-300">Main Dashboard</div> -->
         <div class="radial-progress mt-30" style="--value:70; --size:16rem; --thickness: 2px;">CPU Utilization <br> 70%</div>
         <div class="radial-progress mt-30" style="--value:70; --size:16rem; --thickness: 2rem;">Memory Utilization <br> 80%</div>
       </div>      
-    <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Active Services</h2>
+    <h2 class="font-large font-semibold leading-tight text-2xl ml-2 mt-0 mb-2">Active Services</h2>
     
     <div class="divider w-full"></div>
     
@@ -215,53 +215,36 @@
         <!-- {#if MemoryShare == 100}
             {MemoryShare = 0};
           {/if} -->
-          <div class="stats shadow max-w-fit">
+          <div class="stats shadow max-w-fit item-center">
             
-            <div class="stat w-96 break-words">
-              <!-- <div class="stat-figure text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-              </div> -->
+            <div class="stat w-80 break-words">
               <div class="stat-title">Service Type</div>
               <div class="stat-value text-primary text-base truncate">{service.name}</div>
-              <!-- <div class="stat-desc">21% more than last month</div> -->
             </div>
             
             <div class="stat w-64">
-              <!-- <div class="stat-figure text-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              </div> -->
               <div class="stat-title">Run Time</div>
               
-              <div class="stat-value text-secondary">{Hour}:{Min}:{Sec}</div>
-              <!-- <div class="stat-desc">21% more than last month</div> -->
+              <div class="stat-value">{Hour}:{Min}:{Sec}</div>
             </div>
 
-            <div class="stat w-64">
+            <div class="stat w-48">
               <div class="stat-value">{(MemoryShare).toFixed(2)}%</div>
               <div class="stat-title">Memory Usage</div>
-              <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
             </div>
             
-            <div class="stat w-64">
-              <!-- <div class="stat-figure text-secondary">
-                <div class="avatar online">
-                  <div class="w-16 rounded-full">
-                    <img src="https://api.lorem.space/image/face?w=128&h=128" />
-                  </div>
-                </div>
-              </div> -->
+            <div class="stat w-48">
               <div class="stat-value">{(service.cpu_usage_n_sec/service.cpu_shares*100).toFixed(2)}%</div>
               <div class="stat-title">CPU Usage</div>
-              <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
             </div>
-            <div class="btn-group h-10">          
-              <!-- <Toggle bind:checked={isRadio} let:checked={checked}> -->
-              <Toggle bind:checked={isRadio} let:checked={checked}>
-                 <!-- <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button> -->
+            <div class="btn-group h-full">
+            <button on:click={EndService} type="submit" class="w-full h-full btn btn-active" > End Service </button>
+            </div>
+            <!-- <div class="btn-group h-10">           -->
+              <!-- <Toggle bind:checked={isRadio} let:checked={checked}>
                  <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Pause'}</button>
-              </Toggle>
-              <button on:click={EndService} type="submit" class="w-48 h-fit btn btn-active" > End Service </button>
-             </div>   
+              </Toggle> -->
+             <!-- </div>    -->
             
           </div>
            
@@ -274,7 +257,7 @@
       </div>
 
 
-      <h2 class="font-large leading-tight text-2xl ml-2 mt-0 mb-2">Inactive Services</h2>
+      <h2 class="font-large font-semibold leading-tight text-2xl ml-2 mt-0 mb-2">Inactive Services</h2>
       
       <div class="divider w-full"></div>
 
@@ -317,11 +300,8 @@
                 <div class="stat-title">Memory Usage</div>
               </div> -->
               
-              <div class="btn-group h-10">          
-                <!-- <Toggle bind:checked={isRadio} let:checked={checked}>
-                   <button class="w-48 h-fit btn btn-active"> {checked ? 'Start' : 'Running'}</button>
-                </Toggle> -->
-                <button on:click={StartService} type="submit" class="w-48 h-fit btn" > Start Service </button>
+              <div class="btn-group h-full">      
+                <button on:click={StartService} type="submit" class="w-full h-full btn" > Start Service </button>
                </div>   
               
             </div>

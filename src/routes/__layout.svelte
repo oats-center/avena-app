@@ -28,7 +28,7 @@
 				<div class="w-20 lg:hidden">
 					<AvenaLogo />
 				</div>
-				<h1 class="font-semibold">Spectrum Analyzer</h1>
+				<!-- <h1 class="font-semibold">Spectrum Analyzer</h1> -->
 			</div>
 
 			<!-- Right navbar -->
