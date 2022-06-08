@@ -8,11 +8,12 @@
 	// import { scaleLinear } from 'd3-scale';
 
 	let nc: NatsConnection;
-	let fc_value = 90;
+	let fc_value = 98.7;
 	let Gain_value = 10;
 	let Current_fc = 98700000;
 	let Current_span = 1750000;
-	let Current_ft = 98700000;
+	let Current_ft = 98700000
+	let Ft = 98700000;
 
 
 	const jc = JSONCodec();
@@ -66,13 +67,32 @@
 
 		var Fc = fc_value * 1000000;
 
+
 		console.log("Updated")
-		// console.log(Ft , Fc , Gain_value)
+		console.log(Ft , Fc , Gain_value)
 		// console.log(jc.encode({ "ft": Ft , "fc": Fc, "gain": Gain_value}))
 		// nc.publish('sdr.freq', jc.encode({ freq: Fc }));
 		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
 		// nc.publish('sdr.control', jc.encode({ ft: Fc , fc: Fc, gain: Gain_value}));
 	
+	}
+
+	function UpdateFt(Ft) {
+
+		var Fc = fc_value * 1000000;
+
+		console.log("Updated")
+		console.log(Ft , Fc , Gain_value)
+		
+		// nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
+		nc.publish('sdr.control', jc.encode({ "ft": Ft , "fc": Fc, "gain": Gain_value}));
+
+	}
+
+	$: {
+		if (nc) {
+		UpdateFt(Ft);
+	}
 	}
 
 	function SelectGain(){
@@ -87,7 +107,8 @@
 
 	let data: Array<{ x: number; y: number }> = [];
 
-	// let fScale = scaleLinear();
+
+
 </script>
 
 
@@ -97,10 +118,10 @@
 
 		<div class="basis-3/4">
 			<Spectrogram 
+			bind:Ft={Ft}
 			{data}
 			fc2 = {Current_fc} 
 			span2 = {Current_span}
-			Ft = {Current_ft}
 			 />	
 		</div>
 		<div class="basis-1/4 container ml-4 mr-4 mt-4 border">
@@ -128,17 +149,6 @@
 				<span>|</span>
 				<span>50<br>dB</span>
 			</div>
-			<!-- <div class="form-control w-full max-w-xs ">
-				<select bind:value={Gain_value} on:click={SelectGain} class="select select-bordered">
-				<option disabled selected>Select</option>
-				<option>5</option>
-				<option>10</option>
-				<option>15</option>
-				<option>20</option>
-				<option>25</option>
-				<option>30</option>
-				</select>
-			</div> -->
 		</div> 
 	
 </div> 

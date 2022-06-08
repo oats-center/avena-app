@@ -12,30 +12,22 @@
 	export let data: Array<{ x: number; y: number }>;
 	export let fc2;
 	export let span2;
-	// export let Ft;
-	let Ft = 98700000;
+	export let Ft = 98700000;
+	// export let Ft;	
     let brush;
     let range;
 
 
 	let m = { x: 0, left: 0, right: 0 };
-    // export let x = 'x';
-    // export let y = 'y';
 
-    // const {x, y} = getContext('LayerCake');
-
-
-
-    // $: xGetter = x === 'x' ? $xGet : $yGet;
-	// $: yGetter = y === 'y' ? $yGet : $xGet;
-
-	function SelectFc(event) {
+	function SelectFt(event) {
         // console.log(event)
         const { left, right } = brush.getBoundingClientRect();
 		m.x = event.clientX;
 		m.left = left;
 		m.right = right;
 		Ft = Math.round((m.x - left)/(right - left + 35) * (span2 * 2) + fc2 - span2);
+		// return Ft;
 		console.log( Ft )
 	}
 
@@ -43,7 +35,7 @@
 
 </script>
 
-<div class="w-full h-full flex flex-col" bind:this={brush} on:click={SelectFc}>
+<div class="w-full h-full flex flex-col" bind:this={brush} on:click={SelectFt}>
 	<!-- <div class="basis-3/4 max-h-96"> -->
 	<!-- xScale={fScale} -->
 
