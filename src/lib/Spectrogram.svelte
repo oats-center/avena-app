@@ -12,11 +12,13 @@
 	export let data: Array<{ x: number; y: number }>;
 	export let fc2;
 	export let span2;
+	// export let Ft;
+	let Ft = 98700000;
     let brush;
     let range;
 
 
-	let m = { x: 0, y: 0 };
+	let m = { x: 0, left: 0, right: 0 };
     // export let x = 'x';
     // export let y = 'y';
 
@@ -30,20 +32,21 @@
 	function SelectFc(event) {
         // console.log(event)
         const { left, right } = brush.getBoundingClientRect();
-		console.log(m.x-left+35,right);        
-		console.log(fc2,span2);
-		console.log((m.x - left + 35)/(right - left - 35) * (span * 2) + fc - span)
-		// ft = (m.x - left + 35)/(right - left - 35) * (span * 2) + fc - span
-
+		m.x = event.clientX;
+		m.left = left;
+		m.right = right;
+		Ft = Math.round((m.x - left)/(right - left + 35) * (span2 * 2) + fc2 - span2);
+		console.log( Ft )
 	}
 
 	// {console.log(data[0].x,data[data.length-1].x)}
 
 </script>
 
-<div class="w-full h-full flex flex-col" bind:this={brush} on:mousemove={SelectFc}>
+<div class="w-full h-full flex flex-col" bind:this={brush} on:click={SelectFc}>
 	<!-- <div class="basis-3/4 max-h-96"> -->
 	<!-- xScale={fScale} -->
+
 	<LayerCake        
 		{data}		
 		x="x"
@@ -52,18 +55,24 @@
 		yDomain={[-8, 5]}
 		padding={{ left: 35, right: 10, bottom: 20 }}    
 	>
+	
     <Svg >
         <AxisX formatTick={(d) => `${format('~s')(d)}Hz`} />
         <AxisY formatTick={(d) => `${d} dB`} />
         <Line/>
         <!-- <Area /> -->
     </Svg>
-        <!-- <div
+	<div
+	style="left:{(m.x - m.left)}px;"
+	class="line"></div>
+	<div
       class="tooltip"
       style="
-        left:{ $width }px;"
-       >
-      </div> -->
+        width:50 px;
+        top: 500 px;
+        left:{(m.x - m.left)}px;"
+      >
+	<div class="title">Tune to {Math.round(Ft/10000)/100}Mhz</div>
         
 	</LayerCake>
 
@@ -91,3 +100,38 @@
 		
 	</div> -->
 </div>
+
+
+
+<style>
+	.tooltip {
+	  position: absolute;
+	  font-size: 13px;
+	  pointer-events: none;
+	  border: 1px solid #ccc;
+	  background: rgba(255, 255, 255, 0.85);
+	  transform: translate(-50%, -100%);
+	  padding: 5px;
+	  z-index: 15;
+	  pointer-events: none;
+	}
+	.line {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  width: 1px;
+	  border-left: 1px dotted #666;
+	  pointer-events: none;
+	}
+	.tooltip,
+	.line {
+	  transition: left 250ms ease-out, top 250ms ease-out;
+	}
+	.title {
+	  font-weight: bold;
+	}
+	.key {
+	  color: #999;
+	}
+  </style>
+  

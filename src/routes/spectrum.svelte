@@ -3,7 +3,8 @@
 	import { connect, JSONCodec } from 'nats.ws';
 	import type { NatsConnection } from 'nats.ws';
 	import Spectrogram from '$lib/Spectrogram.svelte';
-import { current_component } from 'svelte/internal';
+	import { current_component } from 'svelte/internal';
+	// import Footer from '$lib/footer.svelte';
 	// import { scaleLinear } from 'd3-scale';
 
 	let nc: NatsConnection;
@@ -11,6 +12,7 @@ import { current_component } from 'svelte/internal';
 	let Gain_value = 10;
 	let Current_fc = 98700000;
 	let Current_span = 1750000;
+	let Current_ft = 98700000;
 
 
 	const jc = JSONCodec();
@@ -42,8 +44,6 @@ import { current_component } from 'svelte/internal';
 			let dv = new DataView(array.buffer);
 			Current_fc = fc;
 			Current_span = span;
-			// // console.log (fc, span)
-			// console.log (Current_fc, Current_span)
 
 			data = [];
 			for (let i = 0; i < array.length; i++) {
@@ -66,12 +66,13 @@ import { current_component } from 'svelte/internal';
 
 		var Fc = fc_value * 1000000;
 
-		console.log(Fc)
 		console.log("Updated")
-		console.log(jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}))
+		// console.log(Ft , Fc , Gain_value)
+		// console.log(jc.encode({ "ft": Ft , "fc": Fc, "gain": Gain_value}))
 		// nc.publish('sdr.freq', jc.encode({ freq: Fc }));
 		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
 		// nc.publish('sdr.control', jc.encode({ ft: Fc , fc: Fc, gain: Gain_value}));
+	
 	}
 
 	function SelectGain(){
@@ -90,13 +91,16 @@ import { current_component } from 'svelte/internal';
 </script>
 
 
-
+<h2 class="font-large font-semibold leading-tight text-2xl ml-2 mt-0 mb-12">Spectrum Analyzer</h2>
  <div class="w-full h-full flex flex-row">
+	     
+
 		<div class="basis-3/4">
 			<Spectrogram 
 			{data}
 			fc2 = {Current_fc} 
 			span2 = {Current_span}
+			Ft = {Current_ft}
 			 />	
 		</div>
 		<div class="basis-1/4 container ml-4 mr-4 mt-4 border">
