@@ -3,17 +3,23 @@
 	import { connect, JSONCodec } from 'nats.ws';
 	import type { NatsConnection } from 'nats.ws';
 	import Spectrogram from '$lib/Spectrogram.svelte';
+import { current_component } from 'svelte/internal';
 	// import { scaleLinear } from 'd3-scale';
 
 	let nc: NatsConnection;
 	let fc_value = 90;
 	let Gain_value = 10;
+	let Current_fc = 98700000;
+	let Current_span = 1750000;
+
+
 	const jc = JSONCodec();
 
 	// FIXME: This is how NOT to do it
 	onMount(async () => {
 		// to create a connection to a nats-server:
-		nc = await connect({ servers: 'ws://172.16.2.1:443' });
+		// nc = await connect({ servers: 'ws://172.16.2.1:443' });
+		nc = await connect({ servers: 'ws://172.16.2.4:443' });
 		// const nc = await connect({ servers: 'demo.nats.io:4223' });
 
 		// create a codec
@@ -34,6 +40,10 @@
 
 			let array = Uint8Array.from(window.atob(fft), (c) => c.charCodeAt(0));
 			let dv = new DataView(array.buffer);
+			Current_fc = fc;
+			Current_span = span;
+			// // console.log (fc, span)
+			// console.log (Current_fc, Current_span)
 
 			data = [];
 			for (let i = 0; i < array.length; i++) {
@@ -83,7 +93,11 @@
 
  <div class="w-full h-full flex flex-row">
 		<div class="basis-3/4">
-			<Spectrogram {data} />	
+			<Spectrogram 
+			{data}
+			fc2 = {Current_fc} 
+			span2 = {Current_span}
+			 />	
 		</div>
 		<div class="basis-1/4 container ml-4 mr-4 mt-4 border">
 			<h1 class="mt-4">
@@ -101,14 +115,14 @@
 			<h1 class="mt-4">
 				Gain: {Gain_value} dB
 			</h1>
-			<input bind:value={Gain_value} on:change={SelectGain} type="range" min="5" max="30" class="range" step="1" />
+			<input bind:value={Gain_value} on:change={SelectGain} type="range" min="0" max="50" class="range" step="1" />
 			<div class="flex justify-between text-xs px-2 ">
-				<span>5<br>dB</span>
+				<span>0<br>dB</span>
 				<span>|</span>
 				<span>|</span>
 				<span>|</span>
 				<span>|</span>
-				<span>30<br>dB</span>
+				<span>50<br>dB</span>
 			</div>
 			<!-- <div class="form-control w-full max-w-xs ">
 				<select bind:value={Gain_value} on:click={SelectGain} class="select select-bordered">
