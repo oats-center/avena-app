@@ -2,15 +2,8 @@
 	import { onMount } from 'svelte';
 	import { connect, JSONCodec } from 'nats.ws';
 	import type { NatsConnection } from 'nats.ws';
+	import Spectrogram from '$lib/Spectrogram.svelte';
 	// import { scaleLinear } from 'd3-scale';
-	import { format } from 'd3-format';
-
-	import { LayerCake, Svg, Canvas } from 'layercake';
-	import AxisX from '$lib/layercake/AxisX.svelte';
-	import AxisY from '$lib/layercake/AxisY.svelte';
-	// import Area from '$lib/layercake/Area.svelte';
-	import Spectrogram from '$lib/layercake/Spectrogram.svelte';
-	import Line from '$lib/layercake/Line.svelte';
 
 	let nc: NatsConnection;
 	let fc_value = 90;
@@ -58,13 +51,6 @@
 		}
 	});
 
-	
-	// $: {
-	// 	if (nc) {
-	// 		nc.publish('sdr.freq', JSON.stringify({ freq: fc_value * 1000000 }));
-	// 		console.log("Update");
-	// 	}
-	// }
 
 	function UpdateFc() {
 
@@ -72,70 +58,32 @@
 
 		console.log(Fc)
 		console.log("Updated")
-
-		nc.publish('sdr.freq', jc.encode({ freq: Fc }));
+		console.log(jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}))
+		// nc.publish('sdr.freq', jc.encode({ freq: Fc }));
+		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
+		// nc.publish('sdr.control', jc.encode({ ft: Fc , fc: Fc, gain: Gain_value}));
 	}
 
 	function SelectGain(){
 
-
 		console.log("Hi")
+		var Fc = fc_value * 1000000;
+		// nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}));
+		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
+		// nc.publish('sdr.control', jc.encode({ ft: Fc , fc: Fc, gain: Gain_value}));
 
 	}
-
-	
-	
 
 	let data: Array<{ x: number; y: number }> = [];
 
 	// let fScale = scaleLinear();
 </script>
-<div class="w-full h-full flex flex-col">
-	<h1 class="font-semibold">Spectrum Analyzer</h1>
-	<div class="w-full h-full flex flex-row mt-8">
-		<div class="basis-3/4 w-full h-full flex flex-col">
-			<!-- <div class="basis-3/4 max-h-96"> -->
-				<!-- xScale={fScale} -->
-				<LayerCake
-					{data}
-					x="x"
-					y="y"
-					z="y"
-					yDomain={[-8, 5]}
-					padding={{ left: 35, right: 10, bottom: 20 }}
-				>
-					<Svg>
-						<AxisX formatTick={(d) => `${format('~s')(d)}Hz`} />
-						<AxisY formatTick={(d) => `${d} dB`} />
-						<Line />
-						<!-- <Area /> -->
-					</Svg>
-				</LayerCake>
 
-				<!-- xScale={fScale} -->
-				<LayerCake
-					{data}
-					x="x"
-					y="y"
-					z="y"
-					yDomain={[20, 0]}
-					zRange={[0, 1]}
-					padding={{ left: 35, right: 10, bottom: 20 }}
-				>
-					<Svg>
-						<AxisY gridlines={false} tickMarks={true} formatTick={(d) => `${format('~s')(d)} s`} />
-					</Svg>
 
-					<Canvas>
-						<Spectrogram />
-					</Canvas>
-				</LayerCake>
 
-				
-
-			<!-- <div class="w-full h-full">
-				
-			</div> -->
+ <div class="w-full h-full flex flex-row">
+		<div class="basis-3/4">
+			<Spectrogram {data} />	
 		</div>
 		<div class="basis-1/4 container ml-4 mr-4 mt-4 border">
 			<h1 class="mt-4">
@@ -153,12 +101,18 @@
 			<h1 class="mt-4">
 				Gain: {Gain_value} dB
 			</h1>
-			<div class="form-control w-full max-w-xs ">
-				<!-- <label class="label">
-				<span class="label-text">Gain</span>
-				</label> -->
+			<input bind:value={Gain_value} on:change={SelectGain} type="range" min="5" max="30" class="range" step="1" />
+			<div class="flex justify-between text-xs px-2 ">
+				<span>5<br>dB</span>
+				<span>|</span>
+				<span>|</span>
+				<span>|</span>
+				<span>|</span>
+				<span>30<br>dB</span>
+			</div>
+			<!-- <div class="form-control w-full max-w-xs ">
 				<select bind:value={Gain_value} on:click={SelectGain} class="select select-bordered">
-				<option disabled selected>Pick one</option>
+				<option disabled selected>Select</option>
 				<option>5</option>
 				<option>10</option>
 				<option>15</option>
@@ -166,7 +120,7 @@
 				<option>25</option>
 				<option>30</option>
 				</select>
-			</div>
-		</div>
-	</div>
-</div>
+			</div> -->
+		</div> 
+	
+</div> 
