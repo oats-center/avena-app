@@ -47,7 +47,8 @@
 			Current_span = span;
 
 			data = [];
-			for (let i = 0; i < array.length; i++) {
+			// for (let i = 0; i < array.length; i++) {
+			for (let i = 0; i < Math.round(array.length/2); i++) {
 				data = [
 					...data,
 					{
@@ -72,7 +73,7 @@
 		console.log(Ft , Fc , Gain_value)
 		// console.log(jc.encode({ "ft": Ft , "fc": Fc, "gain": Gain_value}))
 		// nc.publish('sdr.freq', jc.encode({ freq: Fc }));
-		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
+		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}));
 		// nc.publish('sdr.control', jc.encode({ ft: Fc , fc: Fc, gain: Gain_value}));
 	
 	}
@@ -112,11 +113,9 @@
 </script>
 
 
-<h2 class="font-large font-semibold leading-tight text-2xl ml-2 mt-0 mb-12">Spectrum Analyzer</h2>
+<!-- <h2 class="font-large font-semibold leading-tight text-2xl ml-2 mt-0 mb-12">Spectrum Analyzer</h2> -->
  <div class="w-full h-full flex flex-row">
-	     
-
-		<div class="basis-3/4">
+		<div class="basis-3/4 h-full">
 			<Spectrogram 
 			bind:Ft={Ft}
 			{data}

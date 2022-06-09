@@ -7,6 +7,7 @@
 	import Spectrogram from '$lib/layercake/Waterfall.svelte';
 	import Line from '$lib/layercake/Line.svelte';    
 	import { xlink_attr } from 'svelte/internal';
+import Waterfall from '$lib/layercake/Waterfall.svelte';
     // import QuadTree from './QuadTree.html.svelte';
 
 	export let data: Array<{ x: number; y: number }>;
@@ -17,7 +18,6 @@
     let brush;
     let range;
 
-
 	let m = { x: 0, left: 0, right: 0 };
 
 	function SelectFt(event) {
@@ -26,7 +26,8 @@
 		m.x = event.clientX;
 		m.left = left;
 		m.right = right;
-		Ft = Math.round((m.x - left)/(right - left + 35) * (span2 * 2) + fc2 - span2);
+		// Ft = Math.round((m.x - left)/(right - left + 35) * (span2 * 2) + fc2 - span2);
+		Ft = Math.round((m.x - left - 35)/(right - left - 35) * span2 + fc2 - span2/2);
 		// return Ft;
 		console.log( Ft )
 	}
@@ -83,7 +84,8 @@
 		</Svg>
 
 		<Canvas>
-			<Spectrogram />
+			<!-- <Spectrogram /> -->
+			<Waterfall />
 		</Canvas>
 
 	</LayerCake>
@@ -112,7 +114,7 @@
 	  top: 0;
 	  bottom: 0;
 	  width: 1px;
-	  border-left: 1px dotted #666;
+	  border-left: 3px dotted #666;
 	  pointer-events: none;
 	}
 	.tooltip,
@@ -121,9 +123,6 @@
 	}
 	.title {
 	  font-weight: bold;
-	}
-	.key {
-	  color: #999;
 	}
   </style>
   

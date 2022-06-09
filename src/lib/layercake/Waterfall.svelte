@@ -20,7 +20,8 @@
 
 			for (const d of $data) {
 				$ctx.fillStyle = interpolateInferno($zGet(d));
-				$ctx.fillRect($xGet(d), 0, 1, 1);
+				// $ctx.fillRect($xGet(d), 0, 1, 1);
+				$ctx.fillRect($xGet(d), 0, 2.5, 2.5);
 			}
 		}
 	}
