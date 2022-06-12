@@ -12,8 +12,8 @@ import Waterfall from '$lib/layercake/Waterfall.svelte';
     // import QuadTree from './QuadTree.html.svelte';
 
 	export let data: Array<{ x: number; y: number }>;
-	export let fc2;
-	export let span2;
+	export let fc;
+	export let span;
 	// export let Ft = 98700000;
 	export let Ft;
 	export let visible = false;
@@ -37,8 +37,7 @@ import Waterfall from '$lib/layercake/Waterfall.svelte';
 		m.left = left;
 		m.right = right;
 		// Ft = Math.round((m.x - left)/(right - left + 35) * (span2 * 2) + fc2 - span2);
-		Ft = Math.round((m.x - left - 42)/(right - left - 42) * span2 + fc2 - span2/2);
-		// return Ft;
+		Ft = Math.round((m.x - left - 42)/(right - left - 42 - 10) * span + fc - span/2);
 		console.log( Ft )
 	}
 

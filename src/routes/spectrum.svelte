@@ -8,16 +8,13 @@
 	// import { scaleLinear } from 'd3-scale';
 
 	let nc: NatsConnection;
-	// let fc_value = 98.7;
 	let Gain_value = 10;
-	// let Current_fc = 98700000;
-	let Current_span = 1000000;
 	let Ft = 98700000;
-	let fc_value;
-	let Current_fc;
-	let visible = false;
-	let Fc;
+	let Fc = 98700000;
 	let Span;
+	let fc_value = 98.7;
+	let visible = false;
+
 
 
 	const jc = JSONCodec();
@@ -47,9 +44,6 @@
 
 			let array = Uint8Array.from(window.atob(fft), (c) => c.charCodeAt(0));
 			let dv = new DataView(array.buffer);
-			Current_fc = fc;
-			Current_span = span;
-			// fc_value = Math.round(fc/1000000);
 			Fc = fc;
 			Span = span;
 
@@ -70,11 +64,12 @@
 		}
 	});
 
+	$: fc_value = Math.round(Fc/10000)/100;
+
 
 	function UpdateFc() {
 
-		var Fc = fc_value * 1000000;
-
+		Fc = fc_value * 1000000;
 
 		console.log("Updated")
 		console.log(Fc , Fc , Gain_value)
@@ -87,7 +82,7 @@
 
 	function UpdateFt(Ft) {
 
-		// var Fc = fc_value * 1000000;
+		Fc = fc_value * 1000000;
 
 		console.log("Updated")
 		console.log(Ft , Fc , Gain_value)
@@ -103,9 +98,11 @@
 	}
 	}
 
+	// $: Fc = fc_value * 1000000;
+
 	function SelectGain(){
 
-		// var Fc = fc_value * 1000000;
+		Fc = fc_value * 1000000;
 		console.log(Ft , Fc , Gain_value)		
 		console.log("Updated")
 		// nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}));
@@ -128,16 +125,17 @@
 			bind:Ft={Ft}
 			bind:visible = {visible}
 			{data}
-			fc2 = {Fc} 
-			span2 = {Current_span}
+			fc = {Fc} 
+			span = {Span}
 			/>	
 		</div>
 		<div class="basis-1/4 container ml-2 mr-2 mt-2 border">
 			<div class="ml-2 mr-2"> 
 			<h1 class="mt-2 mb-2 text-sm semi-bold">
-				Center Frequency: {Fc} Mhz
+				<!-- Center Frequency: {Math.round(Fc/10000)/100} Mhz -->
+				Center Frequency: {fc_value} Mhz
 			</h1>
-			<input bind:value={Fc} on:change={() => UpdateFc()} type="range" min="90" max="100" class="range" step="1"/>
+			<input bind:value={fc_value} on:change={() => UpdateFc()} type="range" min="90" max="100" class="range" step="1"/>
 			<div class="flex justify-between text-xs px-2">
 				<span>90<br>Mhz</span>
 				<span>|</span>
