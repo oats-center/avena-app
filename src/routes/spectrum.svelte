@@ -8,12 +8,16 @@
 	// import { scaleLinear } from 'd3-scale';
 
 	let nc: NatsConnection;
-	let fc_value = 98.7;
+	// let fc_value = 98.7;
 	let Gain_value = 10;
-	let Current_fc = 98700000;
-	let Current_span = 1750000;
-	let Current_ft = 98700000
+	// let Current_fc = 98700000;
+	let Current_span = 1000000;
 	let Ft = 98700000;
+	let fc_value;
+	let Current_fc;
+	let visible = false;
+	let Fc;
+	let Span;
 
 
 	const jc = JSONCodec();
@@ -38,13 +42,16 @@
 				span: number;
 				fft_size: number;
 			};
-
+			// console.log("Receiving data")
 			// let tmp = [];
 
 			let array = Uint8Array.from(window.atob(fft), (c) => c.charCodeAt(0));
 			let dv = new DataView(array.buffer);
 			Current_fc = fc;
 			Current_span = span;
+			// fc_value = Math.round(fc/1000000);
+			Fc = fc;
+			Span = span;
 
 			data = [];
 			// for (let i = 0; i < array.length; i++) {
@@ -58,7 +65,7 @@
 				];
 				i++;
 			}
-
+			// console.log("data")
 			// data = tmp;
 		}
 	});
@@ -70,7 +77,7 @@
 
 
 		console.log("Updated")
-		console.log(Ft , Fc , Gain_value)
+		console.log(Fc , Fc , Gain_value)
 		// console.log(jc.encode({ "ft": Ft , "fc": Fc, "gain": Gain_value}))
 		// nc.publish('sdr.freq', jc.encode({ freq: Fc }));
 		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}));
@@ -80,7 +87,7 @@
 
 	function UpdateFt(Ft) {
 
-		var Fc = fc_value * 1000000;
+		// var Fc = fc_value * 1000000;
 
 		console.log("Updated")
 		console.log(Ft , Fc , Gain_value)
@@ -91,17 +98,18 @@
 	}
 
 	$: {
-		if (nc) {
+		if (nc && visible === true) {
 		UpdateFt(Ft);
 	}
 	}
 
 	function SelectGain(){
 
-		console.log("Hi")
-		var Fc = fc_value * 1000000;
+		// var Fc = fc_value * 1000000;
+		console.log(Ft , Fc , Gain_value)		
+		console.log("Updated")
 		// nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": Fc, "gain": Gain_value}));
-		nc.publish('sdr.control', jc.encode({ "ft": Fc , "fc": 98700000, "gain": Gain_value}));
+		nc.publish('sdr.control', jc.encode({ "ft": Ft , "fc": Fc, "gain": Gain_value}));
 		// nc.publish('sdr.control', jc.encode({ ft: Fc , fc: Fc, gain: Gain_value}));
 
 	}
@@ -118,17 +126,19 @@
 		<div class="basis-3/4 h-full">
 			<Spectrogram 
 			bind:Ft={Ft}
+			bind:visible = {visible}
 			{data}
-			fc2 = {Current_fc} 
+			fc2 = {Fc} 
 			span2 = {Current_span}
-			 />	
+			/>	
 		</div>
-		<div class="basis-1/4 container ml-4 mr-4 mt-4 border">
-			<h1 class="mt-4">
-				Center Frequency: {fc_value} Mhz
+		<div class="basis-1/4 container ml-2 mr-2 mt-2 border">
+			<div class="ml-2 mr-2"> 
+			<h1 class="mt-2 mb-2 text-sm semi-bold">
+				Center Frequency: {Fc} Mhz
 			</h1>
-			<input bind:value={fc_value} on:change={() => UpdateFc()} type="range" min="90" max="100" class="range" step="1" />
-			<div class="flex justify-between text-xs px-2 ">
+			<input bind:value={Fc} on:change={() => UpdateFc()} type="range" min="90" max="100" class="range" step="1"/>
+			<div class="flex justify-between text-xs px-2">
 				<span>90<br>Mhz</span>
 				<span>|</span>
 				<span>|</span>
@@ -136,7 +146,7 @@
 				<span>|</span>
 				<span>100<br>Mhz</span>
 			</div>
-			<h1 class="mt-4">
+			<h1 class="mt-4 text-sm">
 				Gain: {Gain_value} dB
 			</h1>
 			<input bind:value={Gain_value} on:change={SelectGain} type="range" min="0" max="50" class="range" step="1" />
@@ -148,6 +158,7 @@
 				<span>|</span>
 				<span>50<br>dB</span>
 			</div>
+		</div>
 		</div> 
 	
 </div> 

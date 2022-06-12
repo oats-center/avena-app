@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { format } from 'd3-format';
+	import { scaleBand } from 'd3-scale';
     import { getContext } from 'svelte';
 	import { LayerCake, Svg, Canvas } from 'layercake';
 	import AxisX from '$lib/layercake/AxisX.svelte';
@@ -13,63 +14,92 @@ import Waterfall from '$lib/layercake/Waterfall.svelte';
 	export let data: Array<{ x: number; y: number }>;
 	export let fc2;
 	export let span2;
-	export let Ft = 98700000;
-	// export let Ft;	
+	// export let Ft = 98700000;
+	export let Ft;
+	export let visible = false;
+	
     let brush;
     let range;
+	// let innerWidth = 0
+    // let innerHeight = 0
+	let w;
+	let h;
+	let DynamicTicks = 8;
+	
 
 	let m = { x: 0, left: 0, right: 0 };
 
 	function SelectFt(event) {
         // console.log(event)
         const { left, right } = brush.getBoundingClientRect();
+		visible = true;
 		m.x = event.clientX;
 		m.left = left;
 		m.right = right;
 		// Ft = Math.round((m.x - left)/(right - left + 35) * (span2 * 2) + fc2 - span2);
-		Ft = Math.round((m.x - left - 35)/(right - left - 35) * span2 + fc2 - span2/2);
+		Ft = Math.round((m.x - left - 42)/(right - left - 42) * span2 + fc2 - span2/2);
 		// return Ft;
 		console.log( Ft )
 	}
 
-	// {console.log(data[0].x,data[data.length-1].x)}
+	$: {
+		if (w<=300)	{	
+		DynamicTicks = 2;
+	}	else if (w<=600) {
+		DynamicTicks = 4;
+	}	else if (w>600) {
+		DynamicTicks = 8;
+	}
+	console.log("Ticks:"+DynamicTicks)
+}
+
 
 </script>
 
-<div class="w-full h-full flex flex-col" bind:this={brush} on:click={SelectFt}>
+
+<!-- <svelte:window bind:innerWidth bind:innerHeight />
+{innerWidth},{innerHeight} -->
+
+<div class="w-full h-full flex flex-col" bind:this={brush} on:click={SelectFt} bind:clientWidth={w} bind:clientHeight={h}>
+	<!-- size: {w}px x {h}px -->
 	<!-- <div class="basis-3/4 max-h-96"> -->
 	<!-- xScale={fScale} -->
+	<!-- xScale={scaleBand().paddingInner([0.1]).round(true)} -->
+			<!-- xDomain={[data[0].x, data[data.length-1].x]} -->
+			<!-- xScale={scaleBand([5]).paddingInner([0.5]).round(true)} -->		
 
 	<LayerCake        
 		{data}		
 		x="x"
 		y="y"
-		z="y"
+		z="y"		
 		yDomain={[-8, 5]}
-		padding={{ left: 35, right: 10, bottom: 20 }}    
+		padding={{ left: 42, right: 10, bottom: 20 }}    
 	>
 	
     <Svg >
-        <AxisX formatTick={(d) => `${format('~s')(d)}Hz`} />
+        <AxisX formatTick={(d) => `${format('~s')(d)}Hz`} ticks={DynamicTicks}/>
         <AxisY formatTick={(d) => `${d} dB`} />
         <Line/>
         <!-- <Area /> -->
     </Svg>
-	<div
-	style="left:{(m.x - m.left)}px;"
-	class="line"></div>
-	<div
-      class="tooltip"
-      style="
-        width:50 px;
-        top: 500 px;
-        left:{(m.x - m.left)}px;"
-      >
-	<div class="title">Tune to {Math.round(Ft/10000)/100}Mhz</div>
-        
+
+	{#if visible === true}
+		<div
+		style="left:{(m.x - m.left)}px;"
+		class="line"></div>
+		<div
+		class="tooltip"
+		style="
+			width:50 px;
+			top: 500 px;
+			left:{(m.x - m.left)}px;"
+		>
+		<div class="title">Tune to {Math.round(Ft/10000)/100}Mhz</div>
+		</div>		
+	{/if}
 	</LayerCake>
 
-	<!-- xScale={fScale} -->
 	<LayerCake
 		{data}
 		x="x"
@@ -77,10 +107,10 @@ import Waterfall from '$lib/layercake/Waterfall.svelte';
 		z="y"
 		yDomain={[20, 0]}
 		zRange={[0, 1]}
-		padding={{ left: 35, right: 10, bottom: 20 }}
+		padding={{ left: 42, right: 10, bottom: 20 }}
 	>
 		<Svg>
-			<AxisY gridlines={false} tickMarks={true} formatTick={(d) => `${format('~s')(d)} s`} />
+			<AxisY gridlines={false} tickMarks={true} formatTick={(d) => `${format('~s')(d)}s`} />
 		</Svg>
 
 		<Canvas>
@@ -94,8 +124,6 @@ import Waterfall from '$lib/layercake/Waterfall.svelte';
 		
 	</div> -->
 </div>
-
-
 
 <style>
 	.tooltip {
@@ -114,7 +142,7 @@ import Waterfall from '$lib/layercake/Waterfall.svelte';
 	  top: 0;
 	  bottom: 0;
 	  width: 1px;
-	  border-left: 3px dotted #666;
+	  border-left: 2px dotted rgb(0, 0, 0);
 	  pointer-events: none;
 	}
 	.tooltip,
