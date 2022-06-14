@@ -61,12 +61,12 @@
 
 			<a href="https://foundationfar.org/" target="_blank">
 				<img
-					class="h-10 hidden sm:block"
+					class="h-10 hidden lg:block"
 					src="/FFAR.png"
 					alt="Foundation for Food & Agriculture Research Logo"
 				/>
 				<img
-					class="h-10 sm:hidden"
+					class="h-10 lg:hidden"
 					src="/FFAR-small.png"
 					alt="Foundation for Food & Agriculture Research Logo"
 				/>
@@ -75,18 +75,18 @@
 			<!-- IoT4Ag -->
 			<a href="https://iot4ag.us/" target="_blank">
 				<div>
-					<IoT4AgLogo class="h-10 sm:hidden" />
-					<IoT4AgSmallLogo class="h-10 hidden sm:block" />
+					<IoT4AgLogo class="h-10 lg:hidden" />
+					<IoT4AgSmallLogo class="h-10 hidden lg:block" />
 				</div>
 			</a>
 
 			<!-- Purdue -->
 			<a href="https://purdue.edu" target="_blank">
-				<div class="hidden sm:block">
+				<div class="hidden lg:block">
 					<PurdueDarkLogo class="h-10 hidden dark:block" />
 					<PurdueLightLogo class="h-10 dark:hidden" />
 				</div>
-				<PurdueSmallLogo class="h-10 sm:hidden" />
+				<PurdueSmallLogo class="h-10 lg:hidden" />
 			</a>
 		</footer>
 	</div>
@@ -120,49 +120,3 @@
 		</aside>
 	</div>
 </div>
-
-<style>
-	/*
-	header {
-		text-align: center;
-	}
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-	*/
-	/* main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 1024px;
-        height: 20%;
-        max-width: 200px;
-		margin: 0 auto;
-		box-sizing: border-box;
-	} */
-
-	/* footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 40px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 40px 0;
-		}
-	} */
-</style>

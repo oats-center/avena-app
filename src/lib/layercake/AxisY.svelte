@@ -1,34 +1,34 @@
-<script>
+<script lang="ts">
 	import { getContext } from 'svelte';
 
-	const { padding, xRange, yScale } = getContext('LayerCake');
+	const { padding, xRange, yScale, height } = getContext('LayerCake');
 
 	/** @type {Boolean} [gridlines=true] - Extend lines from the ticks into the chart space */
-	export let gridlines = true;
+	export let gridlines: boolean = true;
 
 	/** @type {Boolean} [tickMarks=false] - Show a vertical mark for each tick. */
-	export let tickMarks = false;
+	export let tickMarks: boolean = false;
 
 	/** @type {Function} [formatTick=d => d] - A function that passes the current tick value and expects a nicely formatted value in return. */
-	export let formatTick = (d) => d;
+	export let formatTick: (d: number, height: number) => number | string = (d) => d;
 
 	/** @type {Number|Array|Function} [ticks=4] - If this is a number, it passes that along to the [d3Scale.ticks](https://github.com/d3/d3-scale) function. If this is an array, hardcodes the ticks to those values. If it's a function, passes along the default tick values and expects an array of tick values in return. */
-	export let ticks = 4;
+	export let ticks: number | number[] | ((t: number[], height: number) => number[]) = 4;
 
 	/** @type {Number} [xTick=0] - How far over to position the text marker. */
-	export let xTick = 0;
+	export let xTick: number = 0;
 
 	/** @type {Number} [yTick=0] - How far up and down to position the text marker. */
-	export let yTick = 0;
+	export let yTick: number = 0;
 
 	/** @type {Number} [dxTick=0] - Any optional value passed to the `dx` attribute on the text marker and tick mark (if visible). This is ignored on the text marker if your scale is ordinal. */
-	export let dxTick = 0;
+	export let dxTick: number = 0;
 
 	/** @type {Number} [dyTick=-4] - Any optional value passed to the `dy` attribute on the text marker and tick mark (if visible). This is ignored on the text marker if your scale is ordinal. */
-	export let dyTick = -4;
+	export let dyTick: number = -4;
 
 	/** @type {String} [textAnchor='start'] The CSS `text-anchor` passed to the label. This is automatically set to "end" if the scale has a bandwidth method, like in ordinal scales. */
-	export let textAnchor = 'start';
+	export let textAnchor: string = 'start';
 
 	$: isBandwidth = typeof $yScale.bandwidth === 'function';
 
@@ -37,7 +37,7 @@
 		: isBandwidth
 		? $yScale.domain()
 		: typeof ticks === 'function'
-		? ticks($yScale.ticks())
+		? ticks($yScale.ticks(), $height)
 		: $yScale.ticks(ticks);
 </script>
 
@@ -59,7 +59,7 @@
 				<line
 					class="tick-mark"
 					x1="0"
-					x2={isBandwidth ? -6 : 6}
+					x2={isBandwidth ? -6 : $padding.left}
 					y1={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 					y2={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 				/>
@@ -69,19 +69,30 @@
 				y={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 				dx={isBandwidth ? -9 : dxTick}
 				dy={isBandwidth ? 4 : dyTick}
-				style="text-anchor:{isBandwidth ? 'end' : textAnchor};">{formatTick(tick)}</text
+				style="text-anchor:{isBandwidth ? 'end' : textAnchor};"
 			>
+				{formatTick(tick, $height)}
+			</text>
 		</g>
 	{/each}
+	<line
+		transform="translate({$xRange[0] + $padding.left - 2}, 0)"
+		class="baseline"
+		x1={1}
+		x2={1}
+		y1="0"
+		y2={$height}
+	/>
 </g>
 
 <style>
 	.tick {
 		font-size: 12px;
-		/* font-weight: 200; */
+		font-weight: bold;
 	}
 
-	.tick line {
+	.tick line,
+	.baseline {
 		stroke: #aaa;
 	}
 	.tick .gridline {
@@ -92,7 +103,8 @@
 		fill: #666;
 	}
 
-	.tick.tick-0 line {
+	.tick.tick-0 line,
+	.baseline {
 		stroke-dasharray: 0;
 	}
 </style>
