@@ -14,7 +14,6 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
-		"@sveltejs/adapter-static": "^1.0.0-next.34",
 		"@sveltejs/kit": "next",
 		"@types/format-duration": "^1.0.1",
 		"@typescript-eslint/eslint-plugin": "^5.28.0",
