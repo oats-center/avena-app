@@ -3,7 +3,7 @@
 	import { setContext } from 'svelte';
 	import WarningIcon from '$lib/assets/icons/WarningIcon.svelte';
 
-	let server = '';
+	let server = 'ibts-compute.ecn.purdue.edu';
 	let token = '';
 	let error: string | undefined;
 	let connecting = false;
@@ -14,7 +14,7 @@
 	async function connect() {
 		connecting = true;
 		error = undefined;
-		error = await nc.connect({ servers: `wws://${server}:443`, token });
+		error = await nc.connect({ servers: `wss://${server}:443`, token });
 		connecting = false;
 	}
 </script>
