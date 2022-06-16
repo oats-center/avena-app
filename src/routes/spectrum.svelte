@@ -169,7 +169,7 @@
 				/>
 
 				<!-- Tune-in -->
-				<Janus server="ws://128.46.36.123:8188">
+				<Janus server="wss://oats3.ecn.purdue.edu:8989">
 					<!-- Gain -->
 					<label for="Volume" class="label font-bold">
 						<span class="label-text">Volume:</span>
