@@ -17,24 +17,21 @@
 	/** @type {Function} [formatTick=d => d] - A function that passes the current tick value and expects a nicely formatted value in return. */
 	export let formatTick: (d: number) => string | number = (d) => d;
 
-	/** @type {Number|Array|Function} [ticks] - If this is a number, it passes that along to the [d3Scale.ticks](https://github.com/d3/d3-scale) function. If this is an array, hardcodes the ticks to those values. If it's a function, passes along the default tick values and expects an array of tick values in return. If nothing, it uses the default ticks supplied by the D3 function. */
-	export let ticks: number | number[] | (() => number | number[]) | undefined = undefined;
+	export let numTicks: number | ((width: number) => number) | undefined = undefined;
 
 	/** @type {Number} [xTick=0] - TK */
 	export let xTick: number = 0;
 
 	/** @type {Number} [yTick=16] - The distance from the baseline to place each tick value. */
-	export let yTick: number = 16;
+	export let yTick: number = 25;
 
 	$: isBandwidth = typeof $xScale.bandwidth === 'function';
 
-	$: tickVals = Array.isArray(ticks)
-		? ticks
-		: isBandwidth
-		? $xScale.domain()
-		: typeof ticks === 'function'
-		? ticks($xScale.ticks())
-		: $xScale.ticks(ticks);
+	$: tickVals = !numTicks
+		? $xScale.ticks()
+		: typeof numTicks === 'function'
+		? $xScale.ticks(numTicks($width))
+		: $xScale.ticks(numTicks);
 
 	function textAnchor(i) {
 		if (snapTicks === true) {
@@ -65,6 +62,7 @@
 				/>
 			{/if}
 			<text
+				class="text-base sm:text-lg"
 				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
 				y={yTick}
 				dx=""
@@ -81,8 +79,8 @@
 <style>
 	.tick {
 		/* font-size: 0.725em; */
-		font-size: 12px;
-		font-family: Arial;
+		/* font-size: 12px; */
+		/* font-family: Arial; */
 		/* font-weight: 200; */
 	}
 

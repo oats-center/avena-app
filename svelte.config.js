@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-auto';
 import preprocess from 'svelte-preprocess';
+import { isoImport } from 'vite-plugin-iso-import';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -8,7 +9,10 @@ const config = {
 	preprocess: preprocess({ postss: true }),
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		vite: {
+			plugins: [isoImport()]
+		}
 	}
 };
 

@@ -10,7 +10,7 @@
 	$: path = line().x($xGet).y($yGet).curve(curve);
 </script>
 
-<path class="stroke-current path-line" d={path($data)} {stroke} />
+<path class="stroke-neutral-focus path-line" d={path($data)} {stroke} />
 
 <style>
 	.path-line {

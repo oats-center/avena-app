@@ -8,3 +8,6 @@ declare namespace App {
 	interface Session {}
 	interface Stuff {}
 }
+
+declare module '*?client';
+declare module '*?server';

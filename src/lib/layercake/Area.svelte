@@ -29,4 +29,4 @@
 	}
 </script>
 
-<path class="path-area fill-slate-500 opacity-50" d={area} />
+<path class="path-area fill-neutral-content opacity-50" d={area} />

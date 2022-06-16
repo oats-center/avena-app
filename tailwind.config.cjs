@@ -2,7 +2,8 @@ module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		fontFamily: {
-			logo: ['B612 Mono', 'monospace']
+			logo: ['B612 Mono', 'monospace'],
+			mono: ['Roboto', 'monospace']
 		},
 		extend: {}
 	},
@@ -33,7 +34,7 @@ module.exports = {
 			// 		error: '#ff5724'
 			// 	}
 			// }
-			'bumblebee',
+			// 'bumblebee',
 			'halloween'
 		],
 		darkTheme: 'halloween'
