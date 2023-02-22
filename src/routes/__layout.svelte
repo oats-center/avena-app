@@ -24,14 +24,14 @@
 	$devices = {
 		udoo1: {
 			id: 'udoo1',
-			name: 'Case 310',
+			name: 'JD 8R370X',
 			type: 'tractor',
 			prefix: 'udoo1',
 			streamId: 2
 		},
 		udoo2: {
 			id: 'udoo2',
-			name: 'JD 89R 370',
+			name: 'Case 310',
 			type: 'tractor',
 			prefix: 'udoo2',
 			streamId: 3
