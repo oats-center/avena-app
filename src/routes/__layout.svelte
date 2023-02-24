@@ -22,12 +22,12 @@
 
 	// Default list of devices
 	$devices = {
-		udoo1: {
-			id: 'udoo1',
+		udoo4: {
+			id: 'udoo4',
 			name: 'JD 8R370X',
-			type: 'tractor',
-			prefix: 'udoo1',
-			streamId: 2
+			type: 'fixed',
+			prefix: 'udoo4',
+			streamId: 5
 		},
 		udoo2: {
 			id: 'udoo2',
@@ -43,12 +43,12 @@
 			prefix: 'udoo3',
 			streamId: 4
 		},
-		udoo4: {
-			id: 'udoo4',
+		udoo1: {
+			id: 'udoo1',
 			name: 'Test stand 2 @ ABE',
-			type: 'fixed',
-			prefix: 'udoo4',
-			streamId: 5
+			type: 'tractor',
+			prefix: 'udoo1',
+			streamId: 2
 		},
 		'pi-dev10': {
 			id: 'pi-dev10',
